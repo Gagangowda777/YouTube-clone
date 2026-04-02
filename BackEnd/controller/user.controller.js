@@ -1,10 +1,10 @@
-import users from "../model/user.model"; // importing users from usermodel
+import users from "../model/user.model.js"; // importing users from usermodel
 import dotenv from 'dotenv'              // importing dotenv
 import bcrypt from "bcryptjs"            // importing bcryptjs
 import jwt from "jsonwebtoken"          // importing jsonwebtoken 
 dotenv.config()                         // configuring dotenv to access .env 
 
-JWT_SECRET = process.env.JWT;  // initialzing jwt token 
+const JWT_SECRET = process.env.JWT;  // initialzing jwt token 
 
 // registration with email validation 
 export const register = async (req, res)=>{
