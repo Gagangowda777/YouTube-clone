@@ -1,16 +1,16 @@
-import express from 'express'
-import mongoose from 'mongoose'
-import dotenv from 'dotenv'
-import cors from 'cors'
+import express from 'express'   // importing express 
+import mongoose from 'mongoose' // importing mongoose
+import dotenv from 'dotenv'     // importing dotenv
+import cors from 'cors'         // importing cors 
 
-dotenv.config()
-const app = express()
-app.use(cors())
-app.use(express.json())
+dotenv.config()         // configuring dotenv to access .env 
+const app = express()   // initializing app to express 
+app.use(cors())         // middleware to use cors (which helps in api with differt port number to connect)
+app.use(express.json()) // middleware to use 
 
 
-
-mongoose.connect(process.env.MONGO_URI)
+// connecting mongoDB server 
+mongoose.connect(process.env.MONGO_URI) 
 .then(()=>{
     console.log("DB Connected");
 })
@@ -18,4 +18,5 @@ mongoose.connect(process.env.MONGO_URI)
     console.log("error", err);
 })
 
+// connecting to the server 
 app.listen(process.env.PORT, ()=>{console.log("server connected")})
