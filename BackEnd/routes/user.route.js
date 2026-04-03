@@ -1,11 +1,10 @@
 import express from "express"                                   // importing express 
 import {register, login} from "../controller/user.controller.js"   // importing register and login logic from user.controller.js
 
-const router = express.Router()     // initialzong router 
+const userRouter = express.Router()     // initialzong router 
 
 
+userRouter.post("/register", register)  // register route 
+userRouter.post("/login", login)        // login route 
 
-router.post("/register", register)  // register route 
-router.post("/login", login)        // login route 
-
-export default router 
+export default userRouter

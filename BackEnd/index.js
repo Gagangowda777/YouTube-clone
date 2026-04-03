@@ -2,7 +2,8 @@ import express from 'express'   // importing express
 import mongoose from 'mongoose' // importing mongoose
 import dotenv from 'dotenv'     // importing dotenv
 import cors from 'cors'         // importing cors 
-import router from './routes/user.route.js'
+import userRouter from './routes/user.route.js'
+import channelRouter from './routes/channel.route.js'
 
 dotenv.config()         // configuring dotenv to access .env 
 const app = express()   // initializing app to express 
@@ -10,7 +11,8 @@ app.use(cors())         // middleware to use cors (which helps in api with diffe
 app.use(express.json()) // middleware to use 
 
 //Routes 
-app.use("/api", router)
+app.use("/api/user", userRouter)
+app.use("/api/channel", channelRouter)
 
 const port = process.env.PORT || 3000; // defining a port that is fetched by env file and added a callbak port incase if not able to fetch
 

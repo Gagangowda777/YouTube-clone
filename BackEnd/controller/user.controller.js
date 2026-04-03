@@ -12,14 +12,14 @@ export const register = async (req, res)=>{
         const {name, email, password} = req.body;
         const existingUser = await users.findOne({email})
         if(existingUser){
-            res.status(400).json({
+            return res.status(400).json({
                 message: "email already exists"
             })
         }
         const hashedPassword = await bcrypt.hash(password, 10)
         
         const user = new users({name, email, password: hashedPassword})
-        user.save()
+        await user.save()
 
         return res.status(201).json({message: "user registered sucessfully"}) 
     }catch(err){
@@ -37,7 +37,7 @@ export const login = async (req, res)=>{
                 message: "Invalid username or email"
             })
         }
-        const match = bcrypt.compare(password, user.password)
+        const match = await bcrypt.compare(password, user.password)
         if(!match){
             return res.status(400).json({
                 message: "Wrong password"
