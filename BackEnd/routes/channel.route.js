@@ -1,10 +1,10 @@
 import express from "express";
-import {createChannel, fetchInfo} from "../controller/channel.controller.js"
+import { createChannel, fetchInfo } from "../controller/channel.controller.js";
+import { verifyToken } from "../middleware/auth.js";
 
-const channelRouter = express.Router()
+const channelRouter = express.Router();
 
-
-channelRouter.post("/createChannel", createChannel);
+channelRouter.post("/createChannel", verifyToken, createChannel);
 channelRouter.get("/channelInfo/:name", fetchInfo);
 
-export default channelRouter
+export default channelRouter;

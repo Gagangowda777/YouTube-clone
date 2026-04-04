@@ -7,16 +7,18 @@ import channelRouter from './routes/channel.route.js'
 import videoRouter from './routes/video.route.js'
 import commentRouter from './routes/comment.route.js'
 
-dotenv.config()         // configuring dotenv to access .env 
-const app = express()   // initializing app to express 
-app.use(cors())         // middleware to use cors (which helps in api with differt port number to connect)
-app.use(express.json()) // middleware to use 
+dotenv.config();
+const app = express();
 
-//Routes 
-app.use("/api/user", userRouter)
-app.use("/api/channel", channelRouter)
-app.use("/api/video", videoRouter)
-app.use("/api/comment", commentRouter)
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Routes
+app.use("/api/user", userRouter);
+app.use("/api/channel", channelRouter);
+app.use("/api/video", videoRouter);
+app.use("/api/comment", commentRouter);
 
 const port = process.env.PORT || 3000; // defining a port that is fetched by env file and added a callbak port incase if not able to fetch
 

@@ -1,29 +1,42 @@
-import comments from "../model/comments.model.js";
+import comments from "../model/comments.model.js"; // importing channels model 
 
+// function to add a comment 
 export const addComment = async (req, res) => {
-    try{
-        const {comment, userName} = req.body; 
-        if(!comment){
-            res.status(404).json({message: "cant post empty commet"})
-        }
-        const content = new comments({comment, userName})
-        await content.save()
-        res.status(201).json({message: "comment posted"})
-    }catch(err){
-        res.status(500).json({
-            message: err.message
-        })
-    }
-}
+  try {
+    const { comment } = req.body;
+    const { videoId } = req.params;
 
-export const fetchComment = async(req, res) => {
-    try{
-        const {userName} = req.params; 
-        const comment = await comments.find({userName})
-        
-        return res.status(200).json(comment)
-
-    }catch(err){
-        res.status(500).json({message: err.message})
+    if (!comment || !comment.trim()) {
+      return res.status(400).json({ message: "Comment text is required" });
     }
-}
+    if (!videoId) {
+      return res.status(400).json({ message: "Video ID is required" });
+    }
+
+    const content = new comments({
+      comment,
+      videoId,
+      userName: req.user?.name || "Anonymous",
+      userId: req.user?.id,
+    });
+    await content.save();
+    res.status(201).json({ message: "Comment posted successfully", comment: content });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// function to fetch comments 
+export const fetchComment = async (req, res) => {
+  try {
+    const { videoId } = req.params;
+    if (!videoId) {
+      return res.status(400).json({ message: "Video ID is required" });
+    }
+
+    const commentList = await comments.find({ videoId }).sort({ createdAt: -1 });
+    return res.status(200).json(commentList);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
