@@ -1,34 +1,58 @@
-import { CiMenuBurger } from "react-icons/ci";
-import { FaRegBell } from "react-icons/fa";
 import { CiSearch } from "react-icons/ci";
 import { FaMicrophone } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
+import { IoEllipsisVertical } from "react-icons/io5";
+import { RxHamburgerMenu } from "react-icons/rx";
 
-
-
-function Header() {
+function Header({ onMenuClick }) {
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-center p-4 ">
-
-        <div className="flex flex-row gap-4 ml-2">
-            <button className="text-2xl"><CiMenuBurger /></button>
-            <h1 className="text-2xl">YouTube</h1>
+    // Header which is sticky 
+    <div className="sticky top-0 z-50">
+      <div className="flex justify-between items-center px-4 py-2.5 gap-6">
+        
+        {/* Logo and Menu */}
+        <div className="flex items-center gap-4 shrink-0">
+          <button onClick={onMenuClick} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+            <RxHamburgerMenu  className="text-2xl " />
+          </button>
+          <div className="flex items-center gap-1">
+            <img src="./src/assets/yt.png" alt="yt-logo" className="w-26 h-7" />
+          </div>
         </div>
 
-        <div className="flex flex-row max-w-2xl w-full">
-            <input type="text" placeholder="search" id="searchbar" className="p-2 rounded-3xl w-full border-2"/>
-            <label htmlFor="searchbar" className="p-2 text-2xl"> <CiSearch /> </label>
-            <button><FaMicrophone /> </button>
-        </div>
-
-        <div className="">
-            <button className="flex flex-row text-xl rounded-2xl p-1">
-                <div className="text-2xl pt-1 pr-1"><CgProfile /></div>
-                <div className="">Sign In</div> 
+        {/* Search Bar with search icon and reacord icon*/}
+        <form className="flex items-center gap-2 max-w-2xl w-full">
+            <div className="w-full flex items-center border border-gray-300 rounded-full px-5 py-2">
+                <input
+                    type="text"
+                    name="searchbar"
+                    placeholder="Search"
+                    id="searchbar"
+                    className="bg-transparent w-full outline-none text-sm placeholder-gray-500 p-0.5"/>
+    
+                <button type="submit" className="cursor-pointer">
+                    <CiSearch className="text-xl" />
+                </button>
+            </div>
+            <button type="button" className="p-2.5 bg-gray-200 hover:bg-gray-300 rounded-full transition-colors hidden sm:flex items-center justify-center">
+                <FaMicrophone className="text-lg text-gray-800" />
             </button>
+
+        </form>
+
+        {/* Icons and Profile */}
+        <div className="flex items-center gap-2 shrink-0">
+          <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+            <IoEllipsisVertical className="text-lg text-gray-700" />
+          </button>
+          <button className="flex items-center gap-2 px-3 py-1.5 bg-gray-200 hover:bg-gray-300 rounded-full transition-colors">
+            <CgProfile className="text-xl text-gray-700" />
+            <span className="text-sm hidden md:inline font-medium p-1">Sign In</span>
+          </button>
         </div>
+      </div>
     </div>
   )
 }
 
-export default Header
+export default Header;
