@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-function MainContent({ isSidebarOpen, refreshKey, onVideoClick }) {
+function MainContent({ isSidebarOpen, refreshKey, onVideoClick, searchQuery }) {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+
+  const categories = ['All', 'Music', 'Gaming', 'Entertainment', 'Education', 'Sports', 'News', 'Tech', 'Vlog', 'Other'];
 
   const getEmbedUrl = (url) => {
     try {
@@ -44,10 +47,22 @@ function MainContent({ isSidebarOpen, refreshKey, onVideoClick }) {
   return (
     <main className={`flex-1 pt-6 px-6 ${isSidebarOpen ? 'ml-60' : 'ml-20'}`}>
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col gap-4 mb-6 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold">Latest Videos</h1>
-            <p className="text-sm text-gray-600 mt-1">Browse videos uploaded to the platform.</p>
+
+        <div className="mb-6">
+          <div className="flex flex-wrap gap-2">
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-4 py-2 rounded-full text-sm font-medium ${
+                  selectedCategory === category
+                    ? 'bg-black text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                {category}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -61,7 +76,15 @@ function MainContent({ isSidebarOpen, refreshKey, onVideoClick }) {
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            {videos.map((video) => (
+            {videos
+              .filter((video) => 
+                (selectedCategory === 'All' || video.category === selectedCategory) &&
+                (searchQuery === '' || 
+                  video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                  video.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                  video.channelName.toLowerCase().includes(searchQuery.toLowerCase()))
+              )
+              .map((video) => (
               <article
                 key={video._id}
                 className="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md cursor-pointer"

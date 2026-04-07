@@ -9,10 +9,11 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import { RiVideoAddLine } from "react-icons/ri";
 import { useAuth } from "../context/AuthContext";
 
-function Header({ onMenuClick, onCreateVideo }) {
+function Header({ onMenuClick, onCreateVideo, onSearch }) {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [searchInput, setSearchInput] = useState('');
   const userMenuRef = useRef(null);
 
   useEffect(() => {
@@ -68,19 +69,21 @@ function Header({ onMenuClick, onCreateVideo }) {
             <button onClick={onMenuClick} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
               <RxHamburgerMenu className="text-2xl" />
             </button>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 cursor-pointer" onClick={() => navigate('/')}>
               <img src="./src/assets/yt.png" alt="yt-logo" className="w-26 h-7" />
             </div>
           </div>
 
           {/* Search Bar with search icon and record icon*/}
-          <form className="flex items-center gap-2 max-w-2xl w-full">
+          <form onSubmit={(e) => { e.preventDefault(); onSearch(searchInput); }} className="flex items-center gap-2 max-w-2xl w-full">
             <div className="w-full flex items-center border border-gray-300 rounded-full px-5 py-2">
               <input
                 type="text"
                 name="searchbar"
                 placeholder="Search"
                 id="searchbar"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
                 className="bg-transparent w-full outline-none text-sm placeholder-gray-500 p-0.5"/>
 
               <button type="submit" className="cursor-pointer">

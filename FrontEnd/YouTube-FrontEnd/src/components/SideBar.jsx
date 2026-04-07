@@ -10,9 +10,11 @@ import { TfiYoutube } from "react-icons/tfi";
 import { MdOutlineOutlinedFlag } from "react-icons/md";
 import { SiYoutubemusic } from "react-icons/si";
 import { SiYoutubekids } from "react-icons/si";
+import { useNavigate } from "react-router-dom";
 
 
 function SideBar({ isOpen }) {
+  const navigate = useNavigate();
   const sidebarWidth = isOpen ? "w-60" : "w-20";
 
   return (
@@ -21,7 +23,7 @@ function SideBar({ isOpen }) {
 
         <div className="px-2 mb-4">
           {/* Home */}
-          <button className={`flex w-full px-3 py-3 hover:bg-gray-100 rounded-lg transition-colors ${isOpen ? 'items-center gap-6 justify-start' : 'flex-col items-center gap-1 justify-center'}`}>
+          <button onClick={() => navigate('/')} className={`flex w-full px-3 py-3 hover:bg-gray-100 rounded-lg transition-colors ${isOpen ? 'items-center gap-6 justify-start' : 'flex-col items-center gap-1 justify-center'}`}>
             <TiHome className="text-2xl" />
             <span className={`text-xs font-medium text-center ${isOpen ? '' : 'leading-tight'}`}>Home</span>
           </button>

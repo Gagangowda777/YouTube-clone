@@ -14,6 +14,7 @@ function AppContent() {
   const [showCreateVideoModal, setShowCreateVideoModal] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [refreshVideosKey, setRefreshVideosKey] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -41,13 +42,14 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header onMenuClick={toggleSidebar} onCreateVideo={handleOpenCreateVideo} />
+      <Header onMenuClick={toggleSidebar} onCreateVideo={handleOpenCreateVideo} onSearch={setSearchQuery} />
       <div className="flex">
         <SideBar isOpen={isSidebarOpen} />
         <MainContent
           isSidebarOpen={isSidebarOpen}
           refreshKey={refreshVideosKey}
           onVideoClick={handleVideoClick}
+          searchQuery={searchQuery}
         />
       </div>
       {showCreateVideoModal && (
