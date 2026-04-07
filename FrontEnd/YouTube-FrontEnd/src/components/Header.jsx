@@ -1,33 +1,16 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 import { FaMicrophone } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { IoMdNotificationsOutline } from "react-icons/io";
-import { RiVideoAddLine } from "react-icons/ri";
 import { useAuth } from "../context/AuthContext";
 
 function Header({ onMenuClick, onCreateVideo, onSearch }) {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const [showUserMenu, setShowUserMenu] = useState(false);
   const [searchInput, setSearchInput] = useState('');
-  const userMenuRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
-        setShowUserMenu(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   const getUserInitials = (name) => {
     return name
@@ -49,13 +32,8 @@ function Header({ onMenuClick, onCreateVideo, onSearch }) {
     }
   };
 
-  const handleUserMenuClick = () => {
-    setShowUserMenu(!showUserMenu);
-  };
-
   const handleLogout = () => {
     logout();
-    setShowUserMenu(false);
   };
 
   return (
@@ -108,28 +86,17 @@ function Header({ onMenuClick, onCreateVideo, onSearch }) {
                   + Create
                 </button>
 
-                {/* User Initials with Dropdown */}
-                <div className="relative pr-2" ref={userMenuRef}>
+                <div className="flex items-center gap-2">
                   <button
-                    onClick={handleUserMenuClick}
+                    onClick={() => navigate('/channel')}
                     className="w-8 h-8 bg-blue-800 rounded-full flex items-center justify-center text-white font-medium text-sm cursor-pointer hover:bg-blue-900">
                     {getUserInitials(user.name)}
                   </button>
-
-                  {/* User Menu Dropdown */}
-                  {showUserMenu && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
-                      <div className="px-4 py-2 text-sm text-gray-700 border-b border-gray-200">
-                        <div className="font-medium">{user.name}</div>
-                        <div className="text-gray-500">{user.email}</div>
-                      </div>
-                      <button
-                        onClick={handleLogout}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        Sign Out
-                      </button>
-                    </div>
-                  )}
+                  <button
+                    onClick={logout}
+                    className="px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded-full text-sm text-gray-700 transition-colors">
+                    Sign Out
+                  </button>
                 </div>
               </>
             ) : (

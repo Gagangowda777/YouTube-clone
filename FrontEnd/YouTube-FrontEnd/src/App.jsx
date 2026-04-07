@@ -7,6 +7,7 @@ import CreateVideoModal from "./components/CreateVideoModal"
 import VideoModal from "./components/VideoModal"
 import LoginPage from "./pages/LoginPage"
 import RegisterPage from "./pages/RegisterPage"
+import ChannelPage from "./pages/ChannelPage"
 import { AuthProvider } from "./context/AuthContext"
 
 function AppContent() {
@@ -45,12 +46,34 @@ function AppContent() {
       <Header onMenuClick={toggleSidebar} onCreateVideo={handleOpenCreateVideo} onSearch={setSearchQuery} />
       <div className="flex">
         <SideBar isOpen={isSidebarOpen} />
-        <MainContent
-          isSidebarOpen={isSidebarOpen}
-          refreshKey={refreshVideosKey}
-          onVideoClick={handleVideoClick}
-          searchQuery={searchQuery}
-        />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <MainContent
+                isSidebarOpen={isSidebarOpen}
+                refreshKey={refreshVideosKey}
+                onVideoClick={handleVideoClick}
+                searchQuery={searchQuery}
+              />
+            }
+          />
+          <Route
+            path="channel"
+            element={<ChannelPage isSidebarOpen={isSidebarOpen} />}
+          />
+          <Route
+            path="*"
+            element={
+              <MainContent
+                isSidebarOpen={isSidebarOpen}
+                refreshKey={refreshVideosKey}
+                onVideoClick={handleVideoClick}
+                searchQuery={searchQuery}
+              />
+            }
+          />
+        </Routes>
       </div>
       {showCreateVideoModal && (
         <CreateVideoModal
