@@ -41,7 +41,12 @@ const VideoModal = ({ video, onClose }) => {
             />
           </div>
           <div className="mt-4">
-            <p className="text-sm text-gray-500">{video.channelName}</p>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-sm text-gray-500">{video.channelName}</p>
+              <span className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">
+                {video.category || 'Other'}
+              </span>
+            </div>
             <p className="mt-2 text-gray-700">{video.description || 'No description provided.'}</p>
             <div className="mt-4 flex flex-wrap gap-2 text-xs text-gray-500">
               <span>{video.views ?? 0} views</span>

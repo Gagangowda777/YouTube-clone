@@ -10,6 +10,7 @@ const CreateVideoModal = ({ onClose, onVideoCreated }) => {
     channelName: user?.name || '',
     videoUrl: '',
     description: '',
+    category: 'Other',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -35,6 +36,7 @@ const CreateVideoModal = ({ onClose, onVideoCreated }) => {
         channelName: formData.channelName || user?.name,
         description: formData.description,
         videoUrl: formData.videoUrl,
+        category: formData.category,
       });
       setSuccess(response.data.message || 'Video created successfully');
       setFormData({
@@ -43,6 +45,7 @@ const CreateVideoModal = ({ onClose, onVideoCreated }) => {
         channelName: user?.name || '',
         videoUrl: '',
         description: '',
+        category: 'Other',
       });
       onVideoCreated();
     } catch (err) {
@@ -85,6 +88,17 @@ const CreateVideoModal = ({ onClose, onVideoCreated }) => {
               className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter thumbnail image URL"
             />
+            {formData.thumbNail && (
+              <div className="mt-2">
+                <p className="text-sm text-gray-600 mb-1">Preview:</p>
+                <img
+                  src={formData.thumbNail}
+                  alt="Thumbnail preview"
+                  className="w-32 h-18 object-cover border rounded"
+                  onError={(e) => { e.target.style.display = 'none'; }}
+                />
+              </div>
+            )}
           </div>
 
           <div>
@@ -120,6 +134,26 @@ const CreateVideoModal = ({ onClose, onVideoCreated }) => {
               className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Add a short description"
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <select
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="Music">Music</option>
+              <option value="Gaming">Gaming</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Education">Education</option>
+              <option value="Sports">Sports</option>
+              <option value="News">News</option>
+              <option value="Tech">Tech</option>
+              <option value="Vlog">Vlog</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
 
           {error && <div className="text-sm text-red-600">{error}</div>}

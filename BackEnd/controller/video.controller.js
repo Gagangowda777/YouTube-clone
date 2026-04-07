@@ -22,7 +22,7 @@ export const fetchVideo = async (req, res) => {
 // function to upload a video 
 export const uploadVideo = async (req, res) => {
   try {
-    const { title, thumbNail, channelName, description, videoUrl } = req.body;
+    const { title, thumbNail, channelName, description, videoUrl, category } = req.body;
     if (!title || !thumbNail || !channelName || !videoUrl) {
       return res.status(400).json({ message: "Title, thumbnail, channel name, and video URL are required" });
     }
@@ -33,6 +33,7 @@ export const uploadVideo = async (req, res) => {
       channelName,
       description,
       videoUrl,
+      category: category || "Other",
       uploadedBy: req.user.id,
     });
     await video.save();
@@ -46,7 +47,7 @@ export const uploadVideo = async (req, res) => {
 export const updateVideo = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, thumbNail, channelName, description, videoUrl } = req.body;
+    const { title, thumbNail, channelName, description, videoUrl, category } = req.body;
     const video = await videos.findById(id);
     if (!video) {
       return res.status(404).json({ message: "Video not found" });
@@ -57,6 +58,7 @@ export const updateVideo = async (req, res) => {
     if (channelName) video.channelName = channelName;
     if (description) video.description = description;
     if (videoUrl) video.videoUrl = videoUrl;
+    if (category) video.category = category;
 
     await video.save();
     res.status(200).json({ message: "Video updated successfully", video });

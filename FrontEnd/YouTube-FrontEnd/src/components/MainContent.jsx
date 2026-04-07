@@ -69,7 +69,7 @@ function MainContent({ isSidebarOpen, refreshKey, onVideoClick }) {
               >
                 <div className="relative h-48 overflow-hidden bg-gray-100">
                   <img
-                    src={video.thumbNail}
+                    src={video.thumbNail || 'https://via.placeholder.com/400x225?text=No+Thumbnail'}
                     alt={video.title}
                     className="h-full w-full object-cover"
                     onError={(e) => { e.target.src = 'https://via.placeholder.com/400x225?text=No+Thumbnail'; }}

@@ -26,6 +26,11 @@ const videoSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    category: {
+        type: String,
+        enum: ["Music", "Gaming", "Entertainment", "Education", "Sports", "News", "Tech", "Vlog", "Other"],
+        default: "Other",
+    },
     uploadedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "users",

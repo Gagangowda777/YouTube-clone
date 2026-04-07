@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 import { FaMicrophone } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
@@ -7,13 +8,10 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { RiVideoAddLine } from "react-icons/ri";
 import { useAuth } from "../context/AuthContext";
-import Login from "./Login";
-import Register from "./Register";
 
 function Header({ onMenuClick, onCreateVideo }) {
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [isLogin, setIsLogin] = useState(true);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const userMenuRef = useRef(null);
 
@@ -39,28 +37,14 @@ function Header({ onMenuClick, onCreateVideo }) {
   };
 
   const handleSignInClick = () => {
-    setIsLogin(true);
-    setShowAuthModal(true);
-  };
-
-  const handleSwitchToRegister = () => {
-    setIsLogin(false);
-  };
-
-  const handleSwitchToLogin = () => {
-    setIsLogin(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowAuthModal(false);
+    navigate('/login');
   };
 
   const handleCreateVideo = () => {
     if (user) {
       onCreateVideo();
     } else {
-      setIsLogin(true);
-      setShowAuthModal(true);
+      navigate('/login');
     }
   };
 
@@ -161,15 +145,6 @@ function Header({ onMenuClick, onCreateVideo }) {
           </div>
         </div>
       </div>
-
-      {/* Auth Modal */}
-      {showAuthModal && (
-        isLogin ? (
-          <Login onSwitchToRegister={handleSwitchToRegister} onClose={handleCloseModal}/>
-        ) : (
-          <Register onSwitchToLogin={handleSwitchToLogin} onClose={handleCloseModal}/>
-        )
-      )}
     </>
   );
 }
