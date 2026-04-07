@@ -10,7 +10,7 @@ import { useAuth } from "../context/AuthContext";
 import Login from "./Login";
 import Register from "./Register";
 
-function Header({ onMenuClick }) {
+function Header({ onMenuClick, onCreateVideo }) {
   const { user, logout } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
@@ -56,8 +56,12 @@ function Header({ onMenuClick }) {
   };
 
   const handleCreateVideo = () => {
-    // TODO: Implement create video functionality
-    alert('Create video functionality will be implemented');
+    if (user) {
+      onCreateVideo();
+    } else {
+      setIsLogin(true);
+      setShowAuthModal(true);
+    }
   };
 
   const handleUserMenuClick = () => {
@@ -111,23 +115,17 @@ function Header({ onMenuClick }) {
                 {/* Create Video Button */}
                 <button
                   onClick={handleCreateVideo}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors bg-gray-200 mr-2"
                   title="Create video"
                 >
-                  <RiVideoAddLine className="text-xl text-gray-700" />
-                </button>
-
-                {/* Notification Bell */}
-                <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                  <IoMdNotificationsOutline className="text-xl text-gray-700" />
+                  + Create
                 </button>
 
                 {/* User Initials with Dropdown */}
-                <div className="relative" ref={userMenuRef}>
+                <div className="relative pr-2" ref={userMenuRef}>
                   <button
                     onClick={handleUserMenuClick}
-                    className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-medium text-sm cursor-pointer hover:bg-blue-700 transition-colors"
-                  >
+                    className="w-8 h-8 bg-blue-800 rounded-full flex items-center justify-center text-white font-medium text-sm cursor-pointer hover:bg-blue-900">
                     {getUserInitials(user.name)}
                   </button>
 
@@ -140,8 +138,7 @@ function Header({ onMenuClick }) {
                       </div>
                       <button
                         onClick={handleLogout}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         Sign Out
                       </button>
                     </div>
@@ -155,8 +152,7 @@ function Header({ onMenuClick }) {
                 </button>
                 <button
                   onClick={handleSignInClick}
-                  className="flex items-center gap-2 px-3 py-1.5 bg-gray-200 hover:bg-gray-300 rounded-full transition-colors"
-                >
+                  className="flex items-center gap-2 px-3 py-1.5 bg-gray-200 hover:bg-gray-300 rounded-full transition-colors">
                   <CgProfile className="text-xl text-gray-700" />
                   <span className="text-sm hidden md:inline font-medium p-1">Sign In</span>
                 </button>
@@ -169,15 +165,9 @@ function Header({ onMenuClick }) {
       {/* Auth Modal */}
       {showAuthModal && (
         isLogin ? (
-          <Login
-            onSwitchToRegister={handleSwitchToRegister}
-            onClose={handleCloseModal}
-          />
+          <Login onSwitchToRegister={handleSwitchToRegister} onClose={handleCloseModal}/>
         ) : (
-          <Register
-            onSwitchToLogin={handleSwitchToLogin}
-            onClose={handleCloseModal}
-          />
+          <Register onSwitchToLogin={handleSwitchToLogin} onClose={handleCloseModal}/>
         )
       )}
     </>

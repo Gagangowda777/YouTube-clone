@@ -4,6 +4,7 @@ import { verifyToken } from "../middleware/auth.js";
 
 const videoRouter = express.Router();
 
+videoRouter.get("/fetchvideo", fetchVideo);
 videoRouter.get("/fetchvideo/:id", fetchVideo);
 videoRouter.post("/uploadVideo", verifyToken, uploadVideo);
 videoRouter.put("/updateVideo/:id", verifyToken, updateVideo);
