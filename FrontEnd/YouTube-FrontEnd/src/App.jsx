@@ -8,6 +8,7 @@ import VideoModal from "./components/VideoModal"
 import LoginPage from "./pages/LoginPage"
 import RegisterPage from "./pages/RegisterPage"
 import ChannelPage from "./pages/ChannelPage"
+import VideoPlayerPage from "./pages/VideoPlayerPage"
 import { AuthProvider } from "./context/AuthContext"
 
 function AppContent() {
@@ -61,6 +62,10 @@ function AppContent() {
           <Route
             path="channel"
             element={<ChannelPage isSidebarOpen={isSidebarOpen} />}
+          />
+          <Route
+            path="video/:videoId"
+            element={<VideoPlayerPage isSidebarOpen={isSidebarOpen} />}
           />
           <Route
             path="*"

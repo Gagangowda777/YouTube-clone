@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function MainContent({ isSidebarOpen, refreshKey, onVideoClick, searchQuery }) {
+  const navigate = useNavigate();
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const categories = ['All', 'Music', 'Gaming', 'Entertainment', 'Education', 'Sports', 'News', 'Tech', 'Vlog', 'Other'];
+  const categories = ['All', 'Music', 'Gaming', 'Entertainment', 'Education', 'Sports', 'News', 'Tech', 'Vlog', 'Lifestyle', 'Food', 'Travel', 'DIY', 'Comedy', 'Other'];
 
   const getEmbedUrl = (url) => {
     try {
@@ -88,14 +90,14 @@ function MainContent({ isSidebarOpen, refreshKey, onVideoClick, searchQuery }) {
               <article
                 key={video._id}
                 className="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md cursor-pointer"
-                onClick={() => onVideoClick(video)}
+                onClick={() => navigate(`/video/${video._id}`)}
               >
                 <div className="relative h-48 overflow-hidden bg-gray-100">
                   <img
-                    src={video.thumbNail || 'https://via.placeholder.com/400x225?text=No+Thumbnail'}
+                    src={video.thumbNail || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIyNSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRjNGNEY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OTk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIFRodW1ibmFpbDwvdGV4dD48L3N2Zz4='}
                     alt={video.title}
                     className="h-full w-full object-cover"
-                    onError={(e) => { e.target.src = 'https://via.placeholder.com/400x225?text=No+Thumbnail'; }}
+                    onError={(e) => { e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIyNSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRjNGNEY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OTk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIFRodW1ibmFpbDwvdGV4dD48L3N2Zz4='; }}
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-opacity flex items-center justify-center">
                     <div className="bg-white bg-opacity-90 rounded-full p-3">

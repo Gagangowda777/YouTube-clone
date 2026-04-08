@@ -226,6 +226,11 @@ const ChannelPage = ({ isSidebarOpen }) => {
                         <option value="News">News</option>
                         <option value="Tech">Tech</option>
                         <option value="Vlog">Vlog</option>
+                        <option value="Lifestyle">Lifestyle</option>
+                        <option value="Food">Food</option>
+                        <option value="Travel">Travel</option>
+                        <option value="DIY">DIY</option>
+                        <option value="Comedy">Comedy</option>
                         <option value="Other">Other</option>
                       </select>
                     </div>
@@ -259,7 +264,7 @@ const ChannelPage = ({ isSidebarOpen }) => {
                     {/* Video Thumbnail */}
                     <div className="aspect-video overflow-hidden bg-gray-100">
                       <img
-                        src={video.thumbNail || 'https://via.placeholder.com/400x225?text=No+Thumbnail'}
+                        src={video.thumbNail || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIyNSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRjNGNEY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OTk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIFRodW1ibmFpbDwvdGV4dD48L3N2Zz4='}
                         alt={video.title}
                         className="h-full w-full object-cover"
                       />

@@ -152,6 +152,11 @@ const CreateVideoModal = ({ onClose, onVideoCreated }) => {
               <option value="News">News</option>
               <option value="Tech">Tech</option>
               <option value="Vlog">Vlog</option>
+              <option value="Lifestyle">Lifestyle</option>
+              <option value="Food">Food</option>
+              <option value="Travel">Travel</option>
+              <option value="DIY">DIY</option>
+              <option value="Comedy">Comedy</option>
               <option value="Other">Other</option>
             </select>
           </div>
