@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 import { FaMicrophone } from "react-icons/fa";
@@ -11,6 +11,8 @@ function Header({ onMenuClick, onCreateVideo, onSearch }) {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [searchInput, setSearchInput] = useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   const getUserInitials = (name) => {
     return name
@@ -19,6 +21,18 @@ function Header({ onMenuClick, onCreateVideo, onSearch }) {
       .join('')
       .slice(0, 2);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleSignInClick = () => {
     navigate('/login');
@@ -34,6 +48,11 @@ function Header({ onMenuClick, onCreateVideo, onSearch }) {
 
   const handleLogout = () => {
     logout();
+  };
+
+  const handleViewChannel = () => {
+    navigate('/channel');
+    setIsDropdownOpen(false);
   };
 
   return (
@@ -86,17 +105,26 @@ function Header({ onMenuClick, onCreateVideo, onSearch }) {
                   + Create
                 </button>
 
-                <div className="flex items-center gap-2">
+                <div className="relative" ref={dropdownRef}>
                   <button
-                    onClick={() => navigate('/channel')}
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                     className="w-8 h-8 bg-blue-800 rounded-full flex items-center justify-center text-white font-medium text-sm cursor-pointer hover:bg-blue-900">
                     {getUserInitials(user.name)}
                   </button>
-                  <button
-                    onClick={logout}
-                    className="px-3 py-2 bg-gray-200 hover:bg-gray-300 rounded-full text-sm text-gray-700 transition-colors">
-                    Sign Out
-                  </button>
+                  {isDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                      <button
+                        onClick={handleViewChannel}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                        View Channel
+                      </button>
+                      <button
+                        onClick={() => { logout(); setIsDropdownOpen(false); }}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                        Sign Out
+                      </button>
+                    </div>
+                  )}
                 </div>
               </>
             ) : (

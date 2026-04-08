@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { IoEllipsisVertical } from 'react-icons/io5';
 
 const ChannelPage = ({ isSidebarOpen }) => {
   const { user, loading } = useAuth();
@@ -11,6 +12,8 @@ const ChannelPage = ({ isSidebarOpen }) => {
   const [loadingData, setLoadingData] = useState(true);
   const [error, setError] = useState('');
   const [editingVideoId, setEditingVideoId] = useState(null);
+  const [dropdownOpen, setDropdownOpen] = useState(null);
+  const dropdownRef = useRef(null);
   const [editValues, setEditValues] = useState({
     title: '',
     thumbNail: '',
@@ -19,11 +22,31 @@ const ChannelPage = ({ isSidebarOpen }) => {
     category: 'Other',
   });
 
+  const getUserInitials = (name) => {
+    return name
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase())
+      .join('')
+      .slice(0, 2);
+  };
+
   useEffect(() => {
     if (!loading && !user) {
       navigate('/login');
     }
   }, [loading, user, navigate]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     if (!user) return;
@@ -101,6 +124,18 @@ const ChannelPage = ({ isSidebarOpen }) => {
     }
   };
 
+  const deleteVideo = async (videoId) => {
+    if (window.confirm('Are you sure you want to delete this video?')) {
+      try {
+        await axios.delete(`/video/deleteVideo/${videoId}`);
+        setVideos(videos.filter((video) => video._id !== videoId));
+        setDropdownOpen(null);
+      } catch (err) {
+        setError(err.response?.data?.message || 'Failed to delete video');
+      }
+    }
+  };
+
   if (loading || loadingData) {
     return (
       <main className={`flex-1 pt-6 px-6 ${isSidebarOpen ? 'ml-60' : 'ml-20'}`}>
@@ -113,23 +148,21 @@ const ChannelPage = ({ isSidebarOpen }) => {
     <main className={`flex-1 pt-6 px-6 ${isSidebarOpen ? 'ml-60' : 'ml-20'}`}>
       <div className="max-w-7xl mx-auto">
         <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm mb-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold">{channelInfo?.channelName || user.name}'s Channel</h1>
-              <p className="text-sm text-gray-500 mt-2">
+          <div className="flex flex-col lg:flex-row gap-6">
+            {/* User Initial */}
+            <div className="flex justify-center lg:justify-start">
+              <div className="w-30 h-30 bg-blue-800 rounded-full flex items-center justify-center text-white font-bold text-4xl">
+                {getUserInitials(user.name)}
+              </div>
+            </div>
+
+            {/* User Info */}
+            <div className="flex-1 text-center lg:text-left">
+              <h1 className="text-3xl font-bold mb-2">{user.name}</h1>
+              <p className="text-gray-600 mb-2">{user.email}</p>
+              <p className="text-gray-500">
                 {channelInfo?.channelDescription || 'Manage your channel and edit your uploaded videos.'}
               </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <img
-                src={channelInfo?.displayPicture || 'https://via.placeholder.com/80?text=Channel'}
-                alt="Channel"
-                className="h-20 w-20 rounded-full object-cover"
-              />
-              <div className="text-right">
-                <p className="text-sm text-gray-500">Channel owner</p>
-                <p className="font-medium">{user.email}</p>
-              </div>
             </div>
           </div>
         </div>
@@ -145,60 +178,56 @@ const ChannelPage = ({ isSidebarOpen }) => {
             No videos uploaded yet. Use the header Create button to add your first video.
           </div>
         ) : (
-          <div className="grid gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {videos.map((video) => (
-              <div key={video._id} className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+              <div key={video._id} className="rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                 {editingVideoId === video._id ? (
-                  <div className="space-y-4">
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
-                        <input
-                          name="title"
-                          value={editValues.title}
-                          onChange={handleEditChange}
-                          className="w-full rounded-md border border-gray-300 px-3 py-2"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Thumbnail URL</label>
-                        <input
-                          name="thumbNail"
-                          value={editValues.thumbNail}
-                          onChange={handleEditChange}
-                          className="w-full rounded-md border border-gray-300 px-3 py-2"
-                        />
-                      </div>
+                  <div className="p-4 space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                      <input
+                        name="title"
+                        value={editValues.title}
+                        onChange={handleEditChange}
+                        className="w-full rounded-md border border-gray-300 px-3 py-2"
+                      />
                     </div>
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Video URL</label>
-                        <input
-                          name="videoUrl"
-                          value={editValues.videoUrl}
-                          onChange={handleEditChange}
-                          className="w-full rounded-md border border-gray-300 px-3 py-2"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                        <select
-                          name="category"
-                          value={editValues.category}
-                          onChange={handleEditChange}
-                          className="w-full rounded-md border border-gray-300 px-3 py-2"
-                        >
-                          <option value="Music">Music</option>
-                          <option value="Gaming">Gaming</option>
-                          <option value="Entertainment">Entertainment</option>
-                          <option value="Education">Education</option>
-                          <option value="Sports">Sports</option>
-                          <option value="News">News</option>
-                          <option value="Tech">Tech</option>
-                          <option value="Vlog">Vlog</option>
-                          <option value="Other">Other</option>
-                        </select>
-                      </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Thumbnail URL</label>
+                      <input
+                        name="thumbNail"
+                        value={editValues.thumbNail}
+                        onChange={handleEditChange}
+                        className="w-full rounded-md border border-gray-300 px-3 py-2"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Video URL</label>
+                      <input
+                        name="videoUrl"
+                        value={editValues.videoUrl}
+                        onChange={handleEditChange}
+                        className="w-full rounded-md border border-gray-300 px-3 py-2"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                      <select
+                        name="category"
+                        value={editValues.category}
+                        onChange={handleEditChange}
+                        className="w-full rounded-md border border-gray-300 px-3 py-2"
+                      >
+                        <option value="Music">Music</option>
+                        <option value="Gaming">Gaming</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Education">Education</option>
+                        <option value="Sports">Sports</option>
+                        <option value="News">News</option>
+                        <option value="Tech">Tech</option>
+                        <option value="Vlog">Vlog</option>
+                        <option value="Other">Other</option>
+                      </select>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
@@ -206,55 +235,73 @@ const ChannelPage = ({ isSidebarOpen }) => {
                         name="description"
                         value={editValues.description}
                         onChange={handleEditChange}
-                        rows={4}
+                        rows={3}
                         className="w-full rounded-md border border-gray-300 px-3 py-2"
                       />
                     </div>
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex gap-2">
                       <button
-                        type="button"
                         onClick={() => saveVideoDetails(video._id)}
-                        className="rounded-full bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                        className="flex-1 rounded-full bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
                       >
                         Save
                       </button>
                       <button
-                        type="button"
                         onClick={cancelEditing}
-                        className="rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+                        className="flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
                       >
                         Cancel
                       </button>
                     </div>
                   </div>
                 ) : (
-                  <div className="grid gap-4 sm:grid-cols-[280px_1fr] items-center">
-                    <div className="h-44 overflow-hidden rounded-3xl bg-gray-100">
+                  <div className="relative">
+                    {/* Video Thumbnail */}
+                    <div className="aspect-video overflow-hidden bg-gray-100">
                       <img
                         src={video.thumbNail || 'https://via.placeholder.com/400x225?text=No+Thumbnail'}
                         alt={video.title}
                         className="h-full w-full object-cover"
                       />
                     </div>
-                    <div>
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                        <div>
-                          <h2 className="text-xl font-semibold text-gray-900">{video.title}</h2>
-                          <p className="text-sm text-gray-500 mt-1">{video.channelName}</p>
+
+                    {/* Dropdown Menu */}
+                    <div className="absolute top-2 right-2">
+                      <button
+                        onClick={() => setDropdownOpen(dropdownOpen === video._id ? null : video._id)}
+                        className="p-1 rounded-full bg-black bg-opacity-50 hover:bg-opacity-70 transition-colors"
+                      >
+                        <IoEllipsisVertical className="text-white text-lg" />
+                      </button>
+                      {dropdownOpen === video._id && (
+                        <div ref={dropdownRef} className="absolute right-0 mt-1 w-32 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                          <button
+                            onClick={() => {
+                              startEditing(video);
+                              setDropdownOpen(null);
+                            }}
+                            className="block w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => deleteVideo(video._id)}
+                            className="block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                          >
+                            Delete
+                          </button>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => startEditing(video)}
-                          className="rounded-full bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-                        >
-                          Edit Details
-                        </button>
-                      </div>
-                      <p className="mt-3 text-sm text-gray-600 line-clamp-3">{video.description || 'No description available.'}</p>
-                      <div className="mt-4 flex flex-wrap gap-3 text-xs text-gray-500">
+                      )}
+                    </div>
+
+                    {/* Video Info */}
+                    <div className="p-4">
+                      <h3 className="font-semibold text-gray-900 line-clamp-2 mb-1">{video.title}</h3>
+                      <p className="text-sm text-gray-500 mb-2">{video.channelName}</p>
+                      <p className="text-xs text-gray-600 line-clamp-2 mb-2">{video.description || 'No description available.'}</p>
+                      <div className="flex items-center justify-between text-xs text-gray-500">
                         <span>{video.views ?? 0} views</span>
                         <span>{new Date(video.createdAt).toLocaleDateString()}</span>
-                        <span>{video.category || 'Other'}</span>
                       </div>
                     </div>
                   </div>
