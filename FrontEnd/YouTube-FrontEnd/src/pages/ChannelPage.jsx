@@ -180,7 +180,7 @@ const ChannelPage = ({ isSidebarOpen }) => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {videos.map((video) => (
-              <div key={video._id} className="rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <div key={video._id} className="rounded-3xl bg-white overflow-hidden shadow-sm">
                 {editingVideoId === video._id ? (
                   <div className="p-4 space-y-4">
                     <div>

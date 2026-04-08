@@ -333,7 +333,7 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
               comments.map((comment) => (
                 <div key={comment._id} className="flex gap-4">
                   {/* User Avatar */}
-                  <div className="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0"></div>
+                  <div className="w-10 h-10 bg-gray-300 rounded-full shrink-0"></div>
 
                   <div className="flex-1">
                     <div className="flex items-center justify-between gap-2">

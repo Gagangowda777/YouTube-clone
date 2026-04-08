@@ -11,6 +11,16 @@ function MainContent({ isSidebarOpen, refreshKey, onVideoClick, searchQuery }) {
 
   const categories = ['All', 'Music', 'Gaming', 'Entertainment', 'Education', 'Sports', 'News', 'Tech', 'Vlog', 'Lifestyle', 'Food', 'Travel', 'DIY', 'Comedy', 'Other'];
 
+  const getUserInitials = (name) => {
+    return name
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase())
+      .join('')
+      .slice(0, 2);
+  };
+
+  const fallbackThumbnail = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22225%22%3E%3Crect%20width%3D%22400%22%20height%3D%22225%22%20fill%3D%22%23f3f4f6%22/%3E%3Ctext%20x%3D%22200%22%20y%3D%22112.5%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2218%22%20fill%3D%22%23999999%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22middle%22%3ENo%20Thumbnail%3C/text%3E%3C/svg%3E';
+
   const getEmbedUrl = (url) => {
     try {
       const parsed = new URL(url);
@@ -89,32 +99,30 @@ function MainContent({ isSidebarOpen, refreshKey, onVideoClick, searchQuery }) {
               .map((video) => (
               <article
                 key={video._id}
-                className="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md cursor-pointer"
+                className="overflow-hidden rounded-3xl bg-transparent cursor-pointer"
                 onClick={() => navigate(`/video/${video._id}`)}
               >
-                <div className="relative h-48 overflow-hidden bg-gray-100">
+                <div className="overflow-hidden rounded-3xl bg-gray-100 aspect-video">
                   <img
-                    src={video.thumbNail || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIyNSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRjNGNEY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OTk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIFRodW1ibmFpbDwvdGV4dD48L3N2Zz4='}
+                    src={video.thumbNail || fallbackThumbnail}
                     alt={video.title}
                     className="h-full w-full object-cover"
-                    onError={(e) => { e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIyNSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRjNGNEY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OTk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIFRodW1ibmFpbDwvdGV4dD48L3N2Zz4='; }}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = fallbackThumbnail;
+                    }}
                   />
-                  <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-opacity flex items-center justify-center">
-                    <div className="bg-white bg-opacity-90 rounded-full p-3">
-                      <svg className="w-8 h-8 text-gray-800" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M8 5v10l8-5-8-5z"/>
-                      </svg>
-                    </div>
-                  </div>
                 </div>
-                <div className="p-4">
-                  <h2 className="text-lg font-semibold text-gray-900">{video.title}</h2>
-                  <p className="text-sm text-gray-500">{video.channelName}</p>
-                  <p className="mt-2 text-sm text-gray-600 line-clamp-3">{video.description || 'No description provided.'}</p>
-                  <div className="mt-4 flex flex-wrap gap-2 text-xs text-gray-500">
-                    <span>{video.views ?? 0} views</span>
-                    <span>{new Date(video.createdAt).toLocaleDateString()}</span>
+                <div className="px-1 pb-4 pt-4">
+                  <h2 className="text-base font-semibold leading-snug text-gray-900 line-clamp-2">{video.title}</h2>
+                  <div className="mt-3 flex items-center gap-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-xs font-semibold text-white">
+                      {getUserInitials(video.channelName)}
+                    </div>
+                    <p className="text-sm text-gray-500 truncate">{video.channelName}</p>
                   </div>
+                  <p className="mt-3 text-sm text-gray-600 line-clamp-2">{video.description || 'No description provided.'}</p>
+                  <div className="mt-3 text-xs text-gray-500">{video.views ?? 0} views</div>
                 </div>
               </article>
             ))}

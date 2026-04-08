@@ -27,7 +27,7 @@ const VideoModal = ({ video, onClose }) => {
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-xl font-semibold">{video.title}</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700 text-2xl">
-            ×
+            x
           </button>
         </div>
         <div className="p-4">
