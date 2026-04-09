@@ -64,17 +64,17 @@ function MainContent({ isSidebarOpen, refreshKey, onVideoClick, searchQuery }) {
 
   return (
     // main content area which includes category buttons and video grid
-    <main className={`flex-1 pt-6 px-6 ${isSidebarOpen ? 'ml-60' : 'ml-20'}`}>
+    <main className={`flex-1 pt-4 sm:pt-6 px-2 sm:px-4 md:px-6 transition-all duration-300 w-full overflow-x-hidden ${isSidebarOpen ? 'md:ml-60 ml-0' : 'md:ml-20 ml-0'}`}>
       <div className="max-w-7xl mx-auto">
 
         {/* category Buttons */}
-        <div className="mb-6">
-          <div className="flex flex-wrap gap-2">
+        <div className="mb-4 sm:mb-6 w-full overflow-hidden">
+          <div className="flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium ${
+                className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors ${
                   selectedCategory === category
                     ? 'bg-black text-white'
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>
@@ -94,7 +94,7 @@ function MainContent({ isSidebarOpen, refreshKey, onVideoClick, searchQuery }) {
             No videos available yet. Upload one using the button in the header.
           </div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {videos
               .filter((video) => 
                 (selectedCategory === 'All' || video.category === selectedCategory) &&

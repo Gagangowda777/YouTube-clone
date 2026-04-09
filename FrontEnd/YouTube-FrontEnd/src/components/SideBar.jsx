@@ -19,7 +19,7 @@ function SideBar({ isOpen }) {
   const sidebarWidth = isOpen ? "w-60" : "w-20";
 
   return (
-    <div className={`fixed left-0 top-16 h-full bg-white overflow-y-auto ${sidebarWidth}`}>
+    <div className={`fixed left-0 top-16 h-full bg-white overflow-y-auto transition-transform duration-300 z-40 border-r border-gray-100 ${sidebarWidth} ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
       <div className="py-4">
 
         <div className="px-2 mb-4">

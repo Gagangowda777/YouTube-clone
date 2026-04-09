@@ -65,21 +65,21 @@ function Header({ onMenuClick, onCreateVideo, onSearch }) {
     <>
       {/* header which is sticky position */}
       <div className="sticky top-0 z-50">
-        <div className="flex justify-between items-center px-4 py-2.5 gap-6">
+        <div className="flex justify-between items-center px-2 sm:px-4 py-2.5 gap-2 sm:gap-6">
 
           {/* Logo and Menu */}
-          <div className="flex items-center gap-4 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             <button onClick={onMenuClick} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
               <RxHamburgerMenu className="text-2xl" />
             </button>
             <div className="flex items-center gap-1 cursor-pointer" onClick={() => navigate('/')}>
-              <img src="./src/assets/yt.png" alt="yt-logo" className="w-26 h-7" />
+              <img src="./src/assets/yt.png" alt="yt-logo" className="w-20 sm:w-26 h-5 sm:h-7" />
             </div>
           </div>
 
           {/* search Bar with search icon and record icon*/}
-          <form onSubmit={(e) => { e.preventDefault(); onSearch(searchInput); }} className="flex items-center gap-2 max-w-2xl w-full">
-            <div className="w-full flex items-center border border-gray-300 rounded-full px-5 py-2">
+          <form onSubmit={(e) => { e.preventDefault(); onSearch(searchInput); }} className="flex flex-1 items-center gap-1 sm:gap-2 max-w-2xl sm:w-full mx-2 sm:mx-0">
+            <div className="w-full flex items-center border border-gray-300 rounded-full px-3 sm:px-5 py-1.5 sm:py-2">
               <input
                 type="text"
                 name="searchbar"
@@ -105,9 +105,10 @@ function Header({ onMenuClick, onCreateVideo, onSearch }) {
                 {/* create Video Button */}
                 <button
                   onClick={handleCreateVideo}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors bg-gray-200 mr-2" 
+                  className="px-3 py-1.5 sm:px-4 sm:py-2 hover:bg-gray-300 rounded-full transition-colors bg-gray-200 mr-1 sm:mr-2 flex items-center justify-center font-medium" 
                   title="Create video">
-                  + Create
+                  <span className="hidden sm:inline">+ Create</span>
+                  <span className="sm:hidden text-lg leading-none">+</span>
                 </button>
                 {/* profile Dropdown */}
                 <div className="relative" ref={dropdownRef}>

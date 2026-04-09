@@ -203,7 +203,7 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
 
   if (loading) {
     return (
-      <main className={`flex-1 pt-6 px-6 ${isSidebarOpen ? 'ml-60' : 'ml-20'}`}>
+      <main className={`flex-1 pt-4 sm:pt-6 px-2 sm:px-4 md:px-6 transition-all duration-300 w-full overflow-x-hidden ${isSidebarOpen ? 'md:ml-60 ml-0' : 'md:ml-20 ml-0'}`}>
         <div className="max-w-4xl mx-auto text-gray-600">Loading video...</div>
       </main>
     );
@@ -211,7 +211,7 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
 
   if (error && !video) {
     return (
-      <main className={`flex-1 pt-6 px-6 ${isSidebarOpen ? 'ml-60' : 'ml-20'}`}>
+      <main className={`flex-1 pt-4 sm:pt-6 px-2 sm:px-4 md:px-6 transition-all duration-300 w-full overflow-x-hidden ${isSidebarOpen ? 'md:ml-60 ml-0' : 'md:ml-20 ml-0'}`}>
         <div className="max-w-4xl mx-auto text-red-600">{error}</div>
       </main>
     );
@@ -219,7 +219,7 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
 
   if (!video) {
     return (
-      <main className={`flex-1 pt-6 px-6 ${isSidebarOpen ? 'ml-60' : 'ml-20'}`}>
+      <main className={`flex-1 pt-4 sm:pt-6 px-2 sm:px-4 md:px-6 transition-all duration-300 w-full overflow-x-hidden ${isSidebarOpen ? 'md:ml-60 ml-0' : 'md:ml-20 ml-0'}`}>
         <div className="max-w-4xl mx-auto text-gray-600">Video not found</div>
       </main>
     );
@@ -246,16 +246,18 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
               {/* Title */}
               <h1 className="text-3xl font-bold text-gray-900 mb-3">{video.title}</h1>
 
-              {/* Channel Name + Like/Dislike in one row */}
-              <div className="flex items-center gap-3 mb-4">
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-base shrink-0 bg-blue-800">
-                  {video.channelName ? video.channelName.charAt(0).toUpperCase() : '?'}
+              {/* Channel Name + Like/Dislike */}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-3 mb-4 justify-between">
+                <div className="flex items-center gap-3">
+                  <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-base shrink-0 bg-blue-800">
+                    {video.channelName ? video.channelName.charAt(0).toUpperCase() : '?'}
+                  </div>
+                  <p className="text-lg font-medium text-gray-800">{video.channelName}</p>
                 </div>
-                <p className="text-lg text-gray-800">{video.channelName}</p>
 
-                {/* Like & Dislike pill — pushed to the right */}
-                <div className="flex items-center rounded-full bg-gray-100 overflow-hidden ml-auto">
+                {/* Like & Dislike pill */}
+                <div className="flex items-center rounded-full bg-gray-100 overflow-hidden w-fit">
                   <button
                     onClick={toggleLike}
                     className={`flex items-center gap-2 px-4 py-2 transition-colors ${

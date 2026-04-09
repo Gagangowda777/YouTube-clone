@@ -149,7 +149,7 @@ const ChannelPage = ({ isSidebarOpen }) => {
 
   if (loading || loadingData) {
     return (
-      <main className={`flex-1 pt-6 px-6 ${isSidebarOpen ? 'ml-60' : 'ml-20'}`}>
+      <main className={`flex-1 pt-4 sm:pt-6 px-2 sm:px-4 md:px-6 transition-all duration-300 w-full overflow-x-hidden ${isSidebarOpen ? 'md:ml-60 ml-0' : 'md:ml-20 ml-0'}`}>
         <div className="max-w-7xl mx-auto text-gray-600">Loading channel...</div>
       </main>
     );
@@ -162,8 +162,8 @@ const ChannelPage = ({ isSidebarOpen }) => {
         <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm mb-6">
           <div className="flex flex-col lg:flex-row gap-6">
             {/* User Initial */}
-            <div className="flex justify-center lg:justify-start">
-              <div className="w-30 h-30 bg-blue-800 rounded-full flex items-center justify-center text-white font-bold text-4xl">
+            <div className="flex justify-center lg:justify-start shrink-0">
+              <div className="w-24 h-24 sm:w-30 sm:h-30 bg-blue-800 rounded-full flex items-center justify-center text-white font-bold text-3xl sm:text-4xl">
                 {getUserInitials(user.name)}
               </div>
             </div>
