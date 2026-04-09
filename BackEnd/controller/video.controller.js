@@ -79,3 +79,27 @@ export const deleteVideo = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+// function to toggle like
+export const toggleLike = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { action } = req.body;
+    
+    const video = await videos.findById(id);
+    if (!video) {
+      return res.status(404).json({ message: "Video not found" });
+    }
+
+    if (action === 'like') {
+      video.likes = (video.likes || 0) + 1;
+    } else if (action === 'unlike') {
+      video.likes = Math.max(0, (video.likes || 0) - 1);
+    }
+
+    await video.save();
+    res.status(200).json({ message: "Like updated", likes: video.likes });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

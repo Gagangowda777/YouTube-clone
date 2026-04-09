@@ -63,16 +63,13 @@ function AppContent() {
           />
           <Route
             path="channel"
-            element={<ChannelPage isSidebarOpen={isSidebarOpen} />}
-          />
+            element={<ChannelPage isSidebarOpen={isSidebarOpen} />}/>
           <Route
             path="video/:videoId"
-            element={<VideoPlayerPage isSidebarOpen={isSidebarOpen} />}
-          />
+            element={<VideoPlayerPage isSidebarOpen={isSidebarOpen} />}/>
           <Route
             path="*"
-            element={<NotFoundPage />}
-          />
+            element={<NotFoundPage />}/>
         </Routes>
       </div>
       {showCreateVideoModal && (
@@ -80,9 +77,7 @@ function AppContent() {
           onClose={handleCloseCreateVideo}
           onVideoCreated={() => {
             handleVideoCreated();
-            handleCloseCreateVideo();
-          }}
-        />
+            handleCloseCreateVideo();}}/>
       )}
       {selectedVideo && (
         <VideoModal video={selectedVideo} onClose={handleCloseVideoModal} />

@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react"; // importing useState, useEffect, and useRef hooks 
-import { useNavigate } from "react-router-dom";      // importing useNavigate for navigation
+import { useState, useEffect, useRef } from "react"; 
+import { useNavigate } from "react-router-dom";     
 
 // importing icons from react-icons 
 import { CiSearch } from "react-icons/ci";

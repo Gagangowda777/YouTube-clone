@@ -209,8 +209,7 @@ const ChannelPage = ({ isSidebarOpen }) => {
                         name="thumbNail"
                         value={editValues.thumbNail}
                         onChange={handleEditChange}
-                        className="w-full rounded-md border border-gray-300 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white px-3 py-2"
-                      />
+                        className="w-full rounded-md border border-gray-300 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white px-3 py-2"/>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Video URL</label>
@@ -218,8 +217,7 @@ const ChannelPage = ({ isSidebarOpen }) => {
                         name="videoUrl"
                         value={editValues.videoUrl}
                         onChange={handleEditChange}
-                        className="w-full rounded-md border border-gray-300 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white px-3 py-2"
-                      />
+                        className="w-full rounded-md border border-gray-300 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white px-3 py-2"/>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category</label>

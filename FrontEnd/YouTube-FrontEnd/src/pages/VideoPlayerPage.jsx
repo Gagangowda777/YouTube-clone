@@ -6,6 +6,7 @@ import { AiOutlineLike, AiFillLike } from 'react-icons/ai';
 import { AiOutlineDislike, AiFillDislike } from 'react-icons/ai';
 import { IoEllipsisVertical } from 'react-icons/io5';
 
+// video player page component 
 const VideoPlayerPage = ({ isSidebarOpen }) => {
   const { videoId } = useParams();
   const navigate = useNavigate();
@@ -18,12 +19,14 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
   const [submitingComment, setSubmittingComment] = useState(false);
   const [likedVideos, setLikedVideos] = useState({});
   const [dislikedVideos, setDislikedVideos] = useState({});
+  const [likeCount, setLikeCount] = useState(0);
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editingCommentText, setEditingCommentText] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [suggestedVideos, setSuggestedVideos] = useState([]);
   const dropdownRef = useRef(null);
 
+  // function to get user initials
   const getUserInitials = (name) => {
     if (!name) return '?';
     return name
@@ -32,7 +35,7 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
       .join('')
       .slice(0, 2);
   };
-
+  // useEffect hook to handle click outside of dropdown 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -53,13 +56,16 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
         // Fetch video details
         const videoResponse = await axios.get(`/video/fetchvideo/${videoId}`);
         setVideo(videoResponse.data);
+        setLikeCount(videoResponse.data.likes || 0);
 
         // Fetch comments
         const commentsResponse = await axios.get(`/comment/fetchComments/${videoId}`);
         setComments(commentsResponse.data);
-      } catch (err) {
+      } 
+      catch (err) {
         setError(err.response?.data?.message || 'Failed to load video');
-      } finally {
+      } 
+      finally {
         setLoading(false);
       }
     };
@@ -74,7 +80,8 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
       try {
         const response = await axios.get('/video/fetchvideo');
         setSuggestedVideos(response.data.filter((item) => item._id !== videoId));
-      } catch (err) {
+      } 
+      catch (err) {
         console.error('Failed to load suggested videos', err);
       }
     };
@@ -97,7 +104,8 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
         return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
       }
       return url;
-    } catch (err) {
+    } 
+    catch (err) {
       return url;
     }
   };
@@ -105,6 +113,7 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
   const fallbackThumbnail =
     'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22225%22%3E%3Crect width=%22400%22 height=%22225%22 fill=%22%23f3f4f6%22/%3E%3Ctext x=%22200%22 y=%22112.5%22 font-family=%22Arial,sans-serif%22 font-size=%2218%22 fill=%22999999%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22%3ENo Thumbnail%3C/text%3E%3C/svg%3E';
 
+  // function to add comment
   const handleAddComment = async () => {
     if (!user) {
       navigate('/login');
@@ -137,6 +146,7 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
     }
   };
 
+  // function to edit comment 
   const handleEditComment = async (commentId) => {
     if (!editingCommentText.trim()) {
       setError('Comment cannot be empty');
@@ -161,11 +171,13 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
       setEditingCommentId(null);
       setEditingCommentText('');
       setDropdownOpen(null);
-    } catch (err) {
+    } 
+    catch (err) {
       setError(err.response?.data?.message || 'Failed to update comment');
     }
   };
 
+  // function to delete comment 
   const handleDeleteComment = async (commentId) => {
     if (!window.confirm('Are you sure you want to delete this comment?')) {
       return;
@@ -179,21 +191,49 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
       });
       setComments(comments.filter((c) => c._id !== commentId));
       setDropdownOpen(null);
-    } catch (err) {
+    } 
+    catch (err) {
       setError(err.response?.data?.message || 'Failed to delete comment');
     }
   };
 
-  const toggleLike = () => {
+  // function to toggle like
+  const toggleLike = async () => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
+    const isCurrentlyLiked = likedVideos[videoId];
+    const newLikeStatus = !isCurrentlyLiked;
+
     setLikedVideos((prev) => ({
       ...prev,
-      [videoId]: !prev[videoId],
+      [videoId]: newLikeStatus,
     }));
-    if (dislikedVideos[videoId]) {
+    
+    setLikeCount((prev) => newLikeStatus ? prev + 1 : Math.max(0, prev - 1));
+
+    if (dislikedVideos[videoId] && newLikeStatus) {
       setDislikedVideos((prev) => ({
         ...prev,
         [videoId]: false,
       }));
+    }
+
+    try {
+      await axios.put(`/video/likeVideo/${videoId}`, {
+        action: newLikeStatus ? 'like' : 'unlike'
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+    } 
+    catch (err) {
+      console.error(err);
+      setLikeCount((prev) => newLikeStatus ? Math.max(0, prev - 1) : prev + 1);
+      setLikedVideos((prev) => ({ ...prev, [videoId]: isCurrentlyLiked }));
     }
   };
 
@@ -246,8 +286,7 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
                 title={video.title}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-                className="w-full h-full"
-              ></iframe>
+                className="w-full h-full"></iframe>
             </div>
 
             {/* Video Info */}
@@ -272,15 +311,13 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
                     className={`flex items-center gap-2 px-4 py-2 transition-colors ${
                       likedVideos[videoId]
                         ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300'
-                        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-[#3f3f3f]'
-                    }`}
-                  >
+                        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-[#3f3f3f]'}`}>
                     {likedVideos[videoId] ? (
                       <AiFillLike className="text-xl" />
                     ) : (
                       <AiOutlineLike className="text-xl" />
                     )}
-                    <span>Like</span>
+                    <span>{likeCount > 0 ? likeCount : 'Like'}</span>
                   </button>
                   <div className="w-px h-6 bg-gray-300 dark:bg-zinc-600 shrink-0" />
                   <button
@@ -288,9 +325,7 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
                     className={`flex items-center gap-2 px-4 py-2 transition-colors ${
                       dislikedVideos[videoId]
                         ? 'bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300'
-                        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-[#3f3f3f]'
-                    }`}
-                  >
+                        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-[#3f3f3f]'}`}>
                     {dislikedVideos[videoId] ? (
                       <AiFillDislike className="text-xl" />
                     ) : (
@@ -322,8 +357,7 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder="Add a comment..."
                     className="w-full rounded-lg border border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    rows={3}
-                  ></textarea>
+                    rows={3}></textarea>
                   <div className="flex justify-end gap-2 mt-3">
                     <button
                       onClick={() => setNewComment('')}
@@ -382,8 +416,7 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
                                     dropdownOpen === comment._id ? null : comment._id
                                   )
                                 }
-                                className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-800"
-                              >
+                                className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-800">
                                 <IoEllipsisVertical className="text-gray-500 dark:text-gray-400" />
                               </button>
                               {dropdownOpen === comment._id && (
@@ -392,16 +425,13 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
                                     onClick={() => {
                                       setEditingCommentId(comment._id);
                                       setEditingCommentText(comment.comment);
-                                      setDropdownOpen(null);
-                                    }}
-                                    className="block w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-800"
-                                  >
+                                      setDropdownOpen(null);}}
+                                    className="block w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-800">
                                     Edit
                                   </button>
                                   <button
                                     onClick={() => handleDeleteComment(comment._id)}
-                                    className="block w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30"
-                                  >
+                                    className="block w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30">
                                     Delete
                                   </button>
                                 </div>
@@ -415,27 +445,21 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
                             <textarea
                               value={editingCommentText}
                               onChange={(e) =>
-                                setEditingCommentText(e.target.value)
-                              }
+                                setEditingCommentText(e.target.value)}
                               className="w-full rounded-lg border border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              rows={2}
-                            ></textarea>
+                              rows={2}></textarea>
                             <div className="flex gap-2 mt-2">
                               <button
                                 onClick={() => {
                                   setEditingCommentId(null);
-                                  setEditingCommentText('');
-                                }}
-                                className="px-3 py-1 text-sm rounded border border-gray-300 dark:border-zinc-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800"
-                              >
+                                  setEditingCommentText('');}}
+                                className="px-3 py-1 text-sm rounded border border-gray-300 dark:border-zinc-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800">
                                 Cancel
                               </button>
                               <button
                                 onClick={() =>
-                                  handleEditComment(comment._id)
-                                }
-                                className="px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-700"
-                              >
+                                  handleEditComment(comment._id)}
+                                className="px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-700">
                                 Save
                               </button>
                             </div>
@@ -471,8 +495,7 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
                     <article
                       key={item._id}
                       className="flex gap-4 rounded-3xl p-4 transition-colors hover:bg-gray-50 dark:hover:bg-zinc-800/50 cursor-pointer"
-                      onClick={() => navigate(`/video/${item._id}`)}
-                    >
+                      onClick={() => navigate(`/video/${item._id}`)}>
                       <div className="h-28 w-44 overflow-hidden rounded-2xl bg-gray-100 dark:bg-zinc-800 shrink-0">
                         <img
                           src={item.thumbNail || fallbackThumbnail}
@@ -480,9 +503,7 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
                           className="h-full w-full object-cover"
                           onError={(e) => {
                             e.target.onerror = null;
-                            e.target.src = fallbackThumbnail;
-                          }}
-                        />
+                            e.target.src = fallbackThumbnail;}}/>
                       </div>
                       <div className="min-w-0">
                         <h3 className="text-base font-semibold text-gray-900 dark:text-white truncate">{item.title}</h3>
