@@ -24,6 +24,15 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
   const [suggestedVideos, setSuggestedVideos] = useState([]);
   const dropdownRef = useRef(null);
 
+  const getUserInitials = (name) => {
+    if (!name) return '?';
+    return name
+      .split(' ')
+      .map((word) => word.charAt(0).toUpperCase())
+      .join('')
+      .slice(0, 2);
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -358,8 +367,9 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
                 ) : (
                   comments.map((comment) => (
                     <div key={comment._id} className="flex gap-4">
-                      {/* User Avatar */}
-                      <div className="w-10 h-10 bg-gray-300 dark:bg-zinc-700 rounded-full shrink-0"></div>
+                      <div className="w-10 h-10 bg-blue-800 rounded-full flex items-center justify-center text-white font-semibold text-sm shrink-0">
+                        {getUserInitials(comment.userName)}
+                      </div>
 
                       <div className="flex-1">
                         <div className="flex items-center justify-between gap-2">
