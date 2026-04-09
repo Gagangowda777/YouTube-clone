@@ -226,8 +226,8 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
   }
 
   return (
-    <main className={`flex-1 pt-6 px-6 ${isSidebarOpen ? 'ml-60' : 'ml-20'}`}>
-      <div className="max-w-7xl mx-auto">
+    <main className={`flex-1 pt-4 sm:pt-6 px-2 sm:px-4 md:px-6 transition-all duration-300 w-full overflow-x-hidden ${isSidebarOpen ? 'md:ml-60 ml-0' : 'md:ml-20 ml-0'}`}>
+      <div className="max-w-[1600px] mx-auto">
         <div className="grid gap-6 lg:grid-cols-[3fr_1fr] items-start">
           <div className="space-y-6">
             {/* Video Player */}

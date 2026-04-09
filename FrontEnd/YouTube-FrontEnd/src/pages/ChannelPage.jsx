@@ -157,7 +157,7 @@ const ChannelPage = ({ isSidebarOpen }) => {
 
   return (
     // main content area for channel page which displays channel information and list of uploaded videos 
-    <main className={`flex-1 pt-6 px-6 ${isSidebarOpen ? 'ml-60' : 'ml-20'}`}>
+    <main className={`flex-1 pt-4 sm:pt-6 px-2 sm:px-4 md:px-6 transition-all duration-300 w-full overflow-x-hidden ${isSidebarOpen ? 'md:ml-60 ml-0' : 'md:ml-20 ml-0'}`}>
       <div className="max-w-7xl mx-auto">
         <div className="rounded-3xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-[#0f0f0f] p-6 shadow-sm mb-6">
           <div className="flex flex-col lg:flex-row gap-6">

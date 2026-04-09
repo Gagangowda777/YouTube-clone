@@ -14,7 +14,7 @@ import { AuthProvider } from "./context/AuthContext"
 import { ThemeProvider } from "./context/ThemeContext"
 
 function AppContent() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 768);
   const [showCreateVideoModal, setShowCreateVideoModal] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [refreshVideosKey, setRefreshVideosKey] = useState(0);
