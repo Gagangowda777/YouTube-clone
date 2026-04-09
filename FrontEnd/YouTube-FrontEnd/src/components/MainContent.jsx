@@ -90,7 +90,7 @@ function MainContent({ isSidebarOpen, refreshKey, onVideoClick, searchQuery }) {
         ) : error ? (
           <div className="text-red-600">{error}</div>
         ) : videos.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-8 text-center text-gray-600">
+          <div className="border border-dashed border-gray-300 bg-gray-50 p-8 text-center text-gray-600">
             No videos available yet. Upload one using the button in the header.
           </div>
         ) : (
@@ -106,9 +106,9 @@ function MainContent({ isSidebarOpen, refreshKey, onVideoClick, searchQuery }) {
               .map((video) => (
               <article
                 key={video._id}
-                className="overflow-hidden rounded-3xl bg-transparent cursor-pointer"
+                className="overflow-hidden rounded-xl bg-transparent cursor-pointer"
                 onClick={() => navigate(`/video/${video._id}`)}>
-                <div className="overflow-hidden rounded-3xl bg-gray-100 aspect-video">
+                <div className="overflow-hidden rounded-xl bg-gray-100 aspect-video">
                   <img
                     src={video.thumbNail || fallbackThumbnail}
                     alt={video.title}
@@ -120,10 +120,10 @@ function MainContent({ isSidebarOpen, refreshKey, onVideoClick, searchQuery }) {
                 <div className="px-1 pb-4 pt-4">
                   <h2 className="text-base font-semibold leading-snug text-gray-900 line-clamp-2">{video.title}</h2>
                   <div className="mt-3 flex items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-xs font-semibold text-white">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-900 text-xs font-semibold text-white">
                       {getUserInitials(video.channelName)}
                     </div>
-                    <p className="text-sm text-gray-500 truncate">{video.channelName}</p>
+                    <p className="text-gray-700 truncate">{video.channelName}</p>
                   </div>
                   <p className="mt-3 text-sm text-gray-600 line-clamp-2">{video.description || 'No description provided.'}</p>
                   <div className="mt-3 text-xs text-gray-500">{video.views ?? 0} views</div>

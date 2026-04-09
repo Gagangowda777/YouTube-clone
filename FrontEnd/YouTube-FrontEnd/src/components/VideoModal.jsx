@@ -25,7 +25,7 @@ const VideoModal = ({ video, onClose }) => {
   return (
     // video details and embedded video player
     <div className="fixed inset-0 z-50 bg-black bg-opacity-75 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
+      <div className="bg-white max-w-4xl w-full max-h-[90vh] overflow-hidden">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-xl font-semibold">{video.title}</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700 text-2xl">
@@ -38,7 +38,7 @@ const VideoModal = ({ video, onClose }) => {
               title={video.title}
               src={getEmbedUrl(video.videoUrl)}
               className="w-full h-full border-0 rounded"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture"
               allowFullScreen/>
           </div>
           <div className="mt-4">

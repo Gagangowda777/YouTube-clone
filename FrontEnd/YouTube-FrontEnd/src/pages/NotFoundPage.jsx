@@ -17,14 +17,12 @@ const NotFoundPage = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
           <button
             onClick={() => navigate('/')}
-            className="px-8 py-3 bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 transition-colors"
-          >
+            className="px-8 py-3 bg-blue-600 text-white font-medium rounded-full hover:bg-blue-700 transition-colors">
             Go to Home
           </button>
           <button
             onClick={() => navigate(-1)}
-            className="px-8 py-3 border border-gray-300 text-gray-700 font-medium rounded-full hover:bg-gray-100 transition-colors"
-          >
+            className="px-8 py-3 border border-gray-300 text-gray-700 font-medium rounded-full hover:bg-gray-100 transition-colors">
             Go Back
           </button>
         </div>

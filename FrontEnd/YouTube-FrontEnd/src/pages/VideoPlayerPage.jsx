@@ -235,7 +235,6 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
               <iframe
                 src={getEmbedUrl(video.videoUrl)}
                 title={video.title}
-                frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
                 className="w-full h-full"
@@ -243,45 +242,52 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
             </div>
 
             {/* Video Info */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+            <div className="p-2">
               {/* Title */}
               <h1 className="text-3xl font-bold text-gray-900 mb-3">{video.title}</h1>
 
-              {/* Channel Name */}
-              <p className="text-lg text-gray-600 mb-4">{video.channelName}</p>
+              {/* Channel Name + Like/Dislike in one row */}
+              <div className="flex items-center gap-3 mb-4">
+                <div
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-base shrink-0 bg-blue-800">
+                  {video.channelName ? video.channelName.charAt(0).toUpperCase() : '?'}
+                </div>
+                <p className="text-lg text-gray-800">{video.channelName}</p>
 
-              {/* Actions and Description */}
-              <div className="flex flex-wrap items-center gap-4 mb-4">
-                <button
-                  onClick={toggleLike}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full ${
-                    likedVideos[videoId]
-                      ? 'bg-blue-100 text-blue-600'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  {likedVideos[videoId] ? (
-                    <AiFillLike className="text-xl" />
-                  ) : (
-                    <AiOutlineLike className="text-xl" />
-                  )}
-                  <span>Like</span>
-                </button>
-                <button
-                  onClick={toggleDislike}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full ${
-                    dislikedVideos[videoId]
-                      ? 'bg-red-100 text-red-600'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  {dislikedVideos[videoId] ? (
-                    <AiFillDislike className="text-xl" />
-                  ) : (
-                    <AiOutlineDislike className="text-xl" />
-                  )}
-                  <span>Dislike</span>
-                </button>
+                {/* Like & Dislike pill — pushed to the right */}
+                <div className="flex items-center rounded-full bg-gray-100 overflow-hidden ml-auto">
+                  <button
+                    onClick={toggleLike}
+                    className={`flex items-center gap-2 px-4 py-2 transition-colors ${
+                      likedVideos[videoId]
+                        ? 'bg-blue-100 text-blue-600'
+                        : 'text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    {likedVideos[videoId] ? (
+                      <AiFillLike className="text-xl" />
+                    ) : (
+                      <AiOutlineLike className="text-xl" />
+                    )}
+                    <span>Like</span>
+                  </button>
+                  <div className="w-px h-6 bg-gray-300 shrink-0" />
+                  <button
+                    onClick={toggleDislike}
+                    className={`flex items-center gap-2 px-4 py-2 transition-colors ${
+                      dislikedVideos[videoId]
+                        ? 'bg-red-100 text-red-600'
+                        : 'text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    {dislikedVideos[videoId] ? (
+                      <AiFillDislike className="text-xl" />
+                    ) : (
+                      <AiOutlineDislike className="text-xl" />
+                    )}
+                    <span>Dislike</span>
+                  </button>
+                </div>
               </div>
 
               {/* Description */}
@@ -294,7 +300,7 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
             </div>
 
             {/* Comments Section */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+            <div className="p-6 ">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">Comments</h2>
 
               {/* Add Comment Form */}
@@ -310,15 +316,13 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
                   <div className="flex justify-end gap-2 mt-3">
                     <button
                       onClick={() => setNewComment('')}
-                      className="px-4 py-2 rounded-full border border-gray-300 text-gray-700 hover:bg-gray-100"
-                    >
+                      className="px-4 py-2 rounded-full border border-gray-300 text-gray-700 hover:bg-gray-100">
                       Cancel
                     </button>
                     <button
                       onClick={handleAddComment}
                       disabled={submitingComment}
-                      className="px-4 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
-                    >
+                      className="px-4 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50">
                       {submitingComment ? 'Posting...' : 'Post'}
                     </button>
                   </div>
@@ -329,8 +333,7 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
                     Please{' '}
                     <button
                       onClick={() => navigate('/login')}
-                      className="text-blue-600 hover:underline"
-                    >
+                      className="text-blue-600 hover:underline">
                       sign in
                     </button>
                     {' '}to comment.
