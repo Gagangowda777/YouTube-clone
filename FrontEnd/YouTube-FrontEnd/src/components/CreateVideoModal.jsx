@@ -3,8 +3,10 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
 const CreateVideoModal = ({ onClose, onVideoCreated }) => {
-  const { user } = useAuth();
-  const [formData, setFormData] = useState({
+  const { user } = useAuth();     // get current user info from context
+
+  // form state for video details
+  const [formData, setFormData] = useState({    
     title: '',
     thumbNail: '',
     channelName: user?.name || '',
@@ -12,23 +14,26 @@ const CreateVideoModal = ({ onClose, onVideoCreated }) => {
     description: '',
     category: 'Other',
   });
+
+  // state for handling loading, success, and error messages
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+  // handle form input changes
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
-
+  // handle form submission 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     setSuccess('');
-
+    // send POST request to backend to create a new video
     try {
       const response = await axios.post('/video/uploadVideo', {
         title: formData.title,
@@ -38,6 +43,7 @@ const CreateVideoModal = ({ onClose, onVideoCreated }) => {
         videoUrl: formData.videoUrl,
         category: formData.category,
       });
+      // on success, show success message and reset form
       setSuccess(response.data.message || 'Video created successfully');
       setFormData({
         title: '',
@@ -47,10 +53,14 @@ const CreateVideoModal = ({ onClose, onVideoCreated }) => {
         description: '',
         category: 'Other',
       });
-      onVideoCreated();
-    } catch (err) {
+      onVideoCreated(); // notify parent component to refresh video list
+    } 
+    // handle and show error message
+    catch (err) {
       setError(err.response?.data?.message || 'Failed to create video');
-    } finally {
+    } 
+    // finally, reset loading state
+    finally {
       setLoading(false);
     }
   };
@@ -61,10 +71,11 @@ const CreateVideoModal = ({ onClose, onVideoCreated }) => {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold">Upload New Video</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700 text-2xl">
-            ×
+            x
           </button>
         </div>
 
+        {/* form to upload a video */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Video Title</label>
@@ -74,8 +85,7 @@ const CreateVideoModal = ({ onClose, onVideoCreated }) => {
               onChange={handleChange}
               required
               className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter video title"
-            />
+              placeholder="Enter video title"/>
           </div>
 
           <div>
@@ -86,8 +96,8 @@ const CreateVideoModal = ({ onClose, onVideoCreated }) => {
               onChange={handleChange}
               required
               className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter thumbnail image URL"
-            />
+              placeholder="Enter thumbnail image URL"/>
+
             {formData.thumbNail && (
               <div className="mt-2">
                 <p className="text-sm text-gray-600 mb-1">Preview:</p>
@@ -95,8 +105,7 @@ const CreateVideoModal = ({ onClose, onVideoCreated }) => {
                   src={formData.thumbNail}
                   alt="Thumbnail preview"
                   className="w-32 h-18 object-cover border rounded"
-                  onError={(e) => { e.target.style.display = 'none'; }}
-                />
+                  onError={(e) => { e.target.style.display = 'none'; }}/>
               </div>
             )}
           </div>
@@ -109,8 +118,7 @@ const CreateVideoModal = ({ onClose, onVideoCreated }) => {
               onChange={handleChange}
               required
               className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter video URL"
-            />
+              placeholder="Enter video URL"/>
           </div>
 
           <div>
@@ -120,8 +128,7 @@ const CreateVideoModal = ({ onClose, onVideoCreated }) => {
               value={formData.channelName}
               onChange={handleChange}
               className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter channel name"
-            />
+              placeholder="Enter channel name"/>
           </div>
 
           <div>
@@ -132,8 +139,7 @@ const CreateVideoModal = ({ onClose, onVideoCreated }) => {
               onChange={handleChange}
               rows={4}
               className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Add a short description"
-            />
+              placeholder="Add a short description"/>
           </div>
 
           <div>
@@ -142,8 +148,7 @@ const CreateVideoModal = ({ onClose, onVideoCreated }) => {
               name="category"
               value={formData.category}
               onChange={handleChange}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
+              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
               <option value="Music">Music</option>
               <option value="Gaming">Gaming</option>
               <option value="Entertainment">Entertainment</option>
@@ -168,19 +173,18 @@ const CreateVideoModal = ({ onClose, onVideoCreated }) => {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-            >
+              className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
-            >
+              className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50">
               {loading ? 'Uploading...' : 'Upload Video'}
             </button>
           </div>
         </form>
+
       </div>
     </div>
   );

@@ -1,19 +1,24 @@
-import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react"; // importing useState, useEffect, and useRef hooks 
+import { useNavigate } from "react-router-dom";      // importing useNavigate for navigation
+
+// importing icons from react-icons 
 import { CiSearch } from "react-icons/ci";
 import { FaMicrophone } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
+// importing AuthContext to manage user authentication 
 import { useAuth } from "../context/AuthContext";
 
+// function for the header of the application which includes logo, search bar, and user profile
 function Header({ onMenuClick, onCreateVideo, onSearch }) {
-  const navigate = useNavigate();
-  const { user, logout } = useAuth();
-  const [searchInput, setSearchInput] = useState('');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const navigate = useNavigate();     // Hook for navigation
+  const { user, logout } = useAuth(); // Get user info and logout function from AuthContext
+  const [searchInput, setSearchInput] = useState(''); // State for managing search input
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for managing dropdown 
+  const dropdownRef = useRef(null); // Ref for dropdown 
 
+  // function to get user initials for profile icon
   const getUserInitials = (name) => {
     return name
       .split(' ')
@@ -21,7 +26,7 @@ function Header({ onMenuClick, onCreateVideo, onSearch }) {
       .join('')
       .slice(0, 2);
   };
-
+  // Effect to handle clicks outside the dropdown to close it
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -33,23 +38,24 @@ function Header({ onMenuClick, onCreateVideo, onSearch }) {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
+  // function to handle sign in and navigate to login page
   const handleSignInClick = () => {
     navigate('/login');
   };
-
+  // function to handle create video, checks if user is logged in before allowing access to create video modal
   const handleCreateVideo = () => {
     if (user) {
       onCreateVideo();
-    } else {
+    } 
+    else {
       navigate('/login');
     }
   };
-
+  // function to handle logout 
   const handleLogout = () => {
     logout();
   };
-
+  // function to navigate to user's channel page
   const handleViewChannel = () => {
     navigate('/channel');
     setIsDropdownOpen(false);
@@ -57,7 +63,7 @@ function Header({ onMenuClick, onCreateVideo, onSearch }) {
 
   return (
     <>
-      {/* Header which is sticky */}
+      {/* header which is sticky position */}
       <div className="sticky top-0 z-50">
         <div className="flex justify-between items-center px-4 py-2.5 gap-6">
 
@@ -71,7 +77,7 @@ function Header({ onMenuClick, onCreateVideo, onSearch }) {
             </div>
           </div>
 
-          {/* Search Bar with search icon and record icon*/}
+          {/* search Bar with search icon and record icon*/}
           <form onSubmit={(e) => { e.preventDefault(); onSearch(searchInput); }} className="flex items-center gap-2 max-w-2xl w-full">
             <div className="w-full flex items-center border border-gray-300 rounded-full px-5 py-2">
               <input
@@ -92,19 +98,18 @@ function Header({ onMenuClick, onCreateVideo, onSearch }) {
             </button>
           </form>
 
-          {/* Icons and Profile */}
+          {/* icons and profile */}
           <div className="flex items-center gap-2 shrink-0">
             {user ? (
               <>
-                {/* Create Video Button */}
+                {/* create Video Button */}
                 <button
                   onClick={handleCreateVideo}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors bg-gray-200 mr-2"
-                  title="Create video"
-                >
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors bg-gray-200 mr-2" 
+                  title="Create video">
                   + Create
                 </button>
-
+                {/* profile Dropdown */}
                 <div className="relative" ref={dropdownRef}>
                   <button
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -128,6 +133,7 @@ function Header({ onMenuClick, onCreateVideo, onSearch }) {
                 </div>
               </>
             ) : (
+              // contional rendering for sign in button if user is not logged in
               <>
                 <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                   <IoEllipsisVertical className="text-lg text-gray-700" />

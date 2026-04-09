@@ -1,18 +1,22 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 
+// registration function for new user sign up
 const Register = ({ onSwitchToLogin, onClose }) => {
+  // form state for user input during registration
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: ''
   });
+  // state for handling loading and error messages during registration process
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const { register } = useAuth();
 
+  // handle form input changes
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -20,6 +24,7 @@ const Register = ({ onSwitchToLogin, onClose }) => {
     });
   };
 
+  // handle form submission for registration
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -46,6 +51,7 @@ const Register = ({ onSwitchToLogin, onClose }) => {
   };
 
   return (
+    // registration form with name, email, password, and confirm password fields, and error handling    
     <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
         <div className="flex justify-between items-center mb-4">
@@ -57,7 +63,7 @@ const Register = ({ onSwitchToLogin, onClose }) => {
             x
           </button>
         </div>
-
+        {/* Registration Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <input
@@ -67,8 +73,7 @@ const Register = ({ onSwitchToLogin, onClose }) => {
               value={formData.name}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+              required/>
           </div>
 
           <div>
@@ -79,8 +84,7 @@ const Register = ({ onSwitchToLogin, onClose }) => {
               value={formData.email}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+              required/>
           </div>
 
           <div>
@@ -91,8 +95,7 @@ const Register = ({ onSwitchToLogin, onClose }) => {
               value={formData.password}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+              required/>
           </div>
 
           <div>
@@ -103,8 +106,7 @@ const Register = ({ onSwitchToLogin, onClose }) => {
               value={formData.confirmPassword}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+              required/>
           </div>
 
           {error && (
@@ -118,8 +120,7 @@ const Register = ({ onSwitchToLogin, onClose }) => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-          >
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50">
             {loading ? 'Creating Account...' : 'Sign Up'}
           </button>
         </form>
@@ -128,8 +129,7 @@ const Register = ({ onSwitchToLogin, onClose }) => {
           <span className="text-gray-600">Already have an account? </span>
           <button
             onClick={onSwitchToLogin}
-            className="text-blue-600 hover:text-blue-700 font-medium"
-          >
+            className="text-blue-600 hover:text-blue-700 font-medium">
             Sign In
           </button>
         </div>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+// registration page component for new user sign up
 const RegisterPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -15,13 +16,14 @@ const RegisterPage = () => {
   const [success, setSuccess] = useState('');
   const { register } = useAuth();
 
+  // handle form input changes and update state accordingly
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
   };
-
+  // handle form submission for registration, calls register function from context and handles success or error response
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -48,10 +50,11 @@ const RegisterPage = () => {
   };
 
   return (
+    // registration form with name, email, password, and confirm password fields, and error handling
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold mb-6 text-center">Sign Up</h2>
-
+        {/* Registration form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
@@ -62,8 +65,7 @@ const RegisterPage = () => {
               value={formData.name}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+              required/>
           </div>
 
           <div>
@@ -75,8 +77,7 @@ const RegisterPage = () => {
               value={formData.email}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+              required/>
           </div>
 
           <div>
@@ -88,8 +89,7 @@ const RegisterPage = () => {
               value={formData.password}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+              required/>
           </div>
 
           <div>
@@ -101,8 +101,7 @@ const RegisterPage = () => {
               value={formData.confirmPassword}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+              required/>
           </div>
 
           {error && (
@@ -116,8 +115,7 @@ const RegisterPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 transition-colors"
-          >
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 transition-colors">
             {loading ? 'Creating Account...' : 'Sign Up'}
           </button>
         </form>
@@ -126,8 +124,7 @@ const RegisterPage = () => {
           <span className="text-gray-600">Already have an account? </span>
           <button
             onClick={() => navigate('/login')}
-            className="text-blue-600 hover:text-blue-700 font-medium"
-          >
+            className="text-blue-600 hover:text-blue-700 font-medium">
             Sign In
           </button>
         </div>
@@ -135,8 +132,7 @@ const RegisterPage = () => {
         <div className="mt-4 text-center">
           <button
             onClick={() => navigate('/')}
-            className="text-gray-600 hover:text-gray-700 text-sm"
-          >
+            className="text-gray-600 hover:text-gray-700 text-sm">
             ← Back to home
           </button>
         </div>

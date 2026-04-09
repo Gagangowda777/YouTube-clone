@@ -1,8 +1,8 @@
-import { useState } from 'react';
-
+// function to display video details in a modal when a video is clicked
 const VideoModal = ({ video, onClose }) => {
   if (!video) return null;
 
+  // function to convert regular video URL to embed URL for iframe
   const getEmbedUrl = (url) => {
     try {
       const parsed = new URL(url);
@@ -16,12 +16,14 @@ const VideoModal = ({ video, onClose }) => {
         return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
       }
       return url;
-    } catch (err) {
+    } 
+    catch (err) {
       return url;
     }
   };
 
   return (
+    // video details and embedded video player
     <div className="fixed inset-0 z-50 bg-black bg-opacity-75 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
         <div className="flex justify-between items-center p-4 border-b">
@@ -37,8 +39,7 @@ const VideoModal = ({ video, onClose }) => {
               src={getEmbedUrl(video.videoUrl)}
               className="w-full h-full border-0 rounded"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
+              allowFullScreen/>
           </div>
           <div className="mt-4">
             <div className="flex items-center justify-between mb-2">
@@ -50,7 +51,7 @@ const VideoModal = ({ video, onClose }) => {
             <p className="mt-2 text-gray-700">{video.description || 'No description provided.'}</p>
             <div className="mt-4 flex flex-wrap gap-2 text-xs text-gray-500">
               <span>{video.views ?? 0} views</span>
-              <span>{new Date(video.createdAt).toLocaleDateString()}</span>
+              <span>{new Date(video.createdAt).toLocaleDateString()}</span> 
             </div>
           </div>
         </div>

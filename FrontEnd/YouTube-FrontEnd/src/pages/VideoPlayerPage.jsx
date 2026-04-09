@@ -21,6 +21,7 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editingCommentText, setEditingCommentText] = useState('');
   const [dropdownOpen, setDropdownOpen] = useState(null);
+  const [suggestedVideos, setSuggestedVideos] = useState([]);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -59,6 +60,21 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
     }
   }, [videoId]);
 
+  useEffect(() => {
+    const fetchSuggestedVideos = async () => {
+      try {
+        const response = await axios.get('/video/fetchvideo');
+        setSuggestedVideos(response.data.filter((item) => item._id !== videoId));
+      } catch (err) {
+        console.error('Failed to load suggested videos', err);
+      }
+    };
+
+    if (videoId) {
+      fetchSuggestedVideos();
+    }
+  }, [videoId]);
+
   const getEmbedUrl = (url) => {
     try {
       const parsed = new URL(url);
@@ -76,6 +92,9 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
       return url;
     }
   };
+
+  const fallbackThumbnail =
+    'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22225%22%3E%3Crect width=%22400%22 height=%22225%22 fill=%22%23f3f4f6%22/%3E%3Ctext x=%22200%22 y=%22112.5%22 font-family=%22Arial,sans-serif%22 font-size=%2218%22 fill=%22999999%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22%3ENo Thumbnail%3C/text%3E%3C/svg%3E';
 
   const handleAddComment = async () => {
     if (!user) {
@@ -208,214 +227,259 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
 
   return (
     <main className={`flex-1 pt-6 px-6 ${isSidebarOpen ? 'ml-60' : 'ml-20'}`}>
-      <div className="max-w-4xl mx-auto">
-        {/* Video Player */}
-        <div className="mb-6 aspect-video rounded-2xl overflow-hidden bg-black">
-          <iframe
-            src={getEmbedUrl(video.videoUrl)}
-            title={video.title}
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            className="w-full h-full"
-          ></iframe>
-        </div>
+      <div className="max-w-7xl mx-auto">
+        <div className="grid gap-6 lg:grid-cols-[3fr_1fr] items-start">
+          <div className="space-y-6">
+            {/* Video Player */}
+            <div className="aspect-video rounded-2xl overflow-hidden bg-black">
+              <iframe
+                src={getEmbedUrl(video.videoUrl)}
+                title={video.title}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full"
+              ></iframe>
+            </div>
 
-        {/* Video Info */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-6 shadow-sm">
-          {/* Title */}
-          <h1 className="text-3xl font-bold text-gray-900 mb-3">{video.title}</h1>
+            {/* Video Info */}
+            <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+              {/* Title */}
+              <h1 className="text-3xl font-bold text-gray-900 mb-3">{video.title}</h1>
 
-          {/* Channel Name */}
-          <p className="text-lg text-gray-600 mb-4">{video.channelName}</p>
+              {/* Channel Name */}
+              <p className="text-lg text-gray-600 mb-4">{video.channelName}</p>
 
-          {/* Actions and Description */}
-          <div className="flex items-center gap-4 mb-4">
-            <button
-              onClick={toggleLike}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full ${
-                likedVideos[videoId]
-                  ? 'bg-blue-100 text-blue-600'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              {likedVideos[videoId] ? (
-                <AiFillLike className="text-xl" />
-              ) : (
-                <AiOutlineLike className="text-xl" />
-              )}
-              <span>Like</span>
-            </button>
-            <button
-              onClick={toggleDislike}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full ${
-                dislikedVideos[videoId]
-                  ? 'bg-red-100 text-red-600'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              {dislikedVideos[videoId] ? (
-                <AiFillDislike className="text-xl" />
-              ) : (
-                <AiOutlineDislike className="text-xl" />
-              )}
-              <span>Dislike</span>
-            </button>
-          </div>
-
-          {/* Description */}
-          <div className="border-t border-gray-200 pt-4">
-            <h3 className="font-semibold text-gray-900 mb-2">Description</h3>
-            <p className="text-gray-600 whitespace-pre-wrap">
-              {video.description || 'No description provided.'}
-            </p>
-          </div>
-        </div>
-
-        {/* Comments Section */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Comments</h2>
-
-          {/* Add Comment Form */}
-          {user ? (
-            <div className="mb-6 pb-6 border-b border-gray-200">
-              <textarea
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                placeholder="Add a comment..."
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                rows={3}
-              ></textarea>
-              <div className="flex justify-end gap-2 mt-3">
+              {/* Actions and Description */}
+              <div className="flex flex-wrap items-center gap-4 mb-4">
                 <button
-                  onClick={() => setNewComment('')}
-                  className="px-4 py-2 rounded-full border border-gray-300 text-gray-700 hover:bg-gray-100"
+                  onClick={toggleLike}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full ${
+                    likedVideos[videoId]
+                      ? 'bg-blue-100 text-blue-600'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
                 >
-                  Cancel
+                  {likedVideos[videoId] ? (
+                    <AiFillLike className="text-xl" />
+                  ) : (
+                    <AiOutlineLike className="text-xl" />
+                  )}
+                  <span>Like</span>
                 </button>
                 <button
-                  onClick={handleAddComment}
-                  disabled={submitingComment}
-                  className="px-4 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+                  onClick={toggleDislike}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full ${
+                    dislikedVideos[videoId]
+                      ? 'bg-red-100 text-red-600'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
                 >
-                  {submitingComment ? 'Posting...' : 'Post'}
+                  {dislikedVideos[videoId] ? (
+                    <AiFillDislike className="text-xl" />
+                  ) : (
+                    <AiOutlineDislike className="text-xl" />
+                  )}
+                  <span>Dislike</span>
                 </button>
               </div>
-            </div>
-          ) : (
-            <div className="mb-6 pb-6 border-b border-gray-200 p-4 bg-gray-50 rounded-lg">
-              <p className="text-gray-600">
-                Please{' '}
-                <button
-                  onClick={() => navigate('/login')}
-                  className="text-blue-600 hover:underline"
-                >
-                  sign in
-                </button>
-                {' '}to comment.
-              </p>
-            </div>
-          )}
 
-          {error && (
-            <div className="mb-4 p-3 rounded-lg bg-red-50 text-red-600 text-sm">
-              {error}
+              {/* Description */}
+              <div className="border-t border-gray-200 pt-4">
+                <h3 className="font-semibold text-gray-900 mb-2">Description</h3>
+                <p className="text-gray-600 whitespace-pre-wrap">
+                  {video.description || 'No description provided.'}
+                </p>
+              </div>
             </div>
-          )}
 
-          {/* Comments List */}
-          <div className="space-y-4">
-            {comments.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">
-                No comments yet. Be the first to comment!
-              </p>
-            ) : (
-              comments.map((comment) => (
-                <div key={comment._id} className="flex gap-4">
-                  {/* User Avatar */}
-                  <div className="w-10 h-10 bg-gray-300 rounded-full shrink-0"></div>
+            {/* Comments Section */}
+            <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Comments</h2>
 
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="font-semibold text-gray-900">{comment.userName}</p>
-                      {user && user._id === comment.userId && (
-                        <div className="relative" ref={dropdownOpen === comment._id ? dropdownRef : null}>
-                          <button
-                            onClick={() =>
-                              setDropdownOpen(
-                                dropdownOpen === comment._id ? null : comment._id
-                              )
-                            }
-                            className="p-1 rounded-full hover:bg-gray-100"
-                          >
-                            <IoEllipsisVertical className="text-gray-500" />
-                          </button>
-                          {dropdownOpen === comment._id && (
-                            <div className="absolute right-0 mt-1 w-32 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+              {/* Add Comment Form */}
+              {user ? (
+                <div className="mb-6 pb-6 border-b border-gray-200">
+                  <textarea
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder="Add a comment..."
+                    className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows={3}
+                  ></textarea>
+                  <div className="flex justify-end gap-2 mt-3">
+                    <button
+                      onClick={() => setNewComment('')}
+                      className="px-4 py-2 rounded-full border border-gray-300 text-gray-700 hover:bg-gray-100"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleAddComment}
+                      disabled={submitingComment}
+                      className="px-4 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+                    >
+                      {submitingComment ? 'Posting...' : 'Post'}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="mb-6 pb-6 border-b border-gray-200 p-4 bg-gray-50 rounded-lg">
+                  <p className="text-gray-600">
+                    Please{' '}
+                    <button
+                      onClick={() => navigate('/login')}
+                      className="text-blue-600 hover:underline"
+                    >
+                      sign in
+                    </button>
+                    {' '}to comment.
+                  </p>
+                </div>
+              )}
+
+              {error && (
+                <div className="mb-4 p-3 rounded-lg bg-red-50 text-red-600 text-sm">
+                  {error}
+                </div>
+              )}
+
+              {/* Comments List */}
+              <div className="space-y-4">
+                {comments.length === 0 ? (
+                  <p className="text-gray-500 text-center py-8">
+                    No comments yet. Be the first to comment!
+                  </p>
+                ) : (
+                  comments.map((comment) => (
+                    <div key={comment._id} className="flex gap-4">
+                      {/* User Avatar */}
+                      <div className="w-10 h-10 bg-gray-300 rounded-full shrink-0"></div>
+
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="font-semibold text-gray-900">{comment.userName}</p>
+                          {user && user._id === comment.userId && (
+                            <div className="relative" ref={dropdownOpen === comment._id ? dropdownRef : null}>
                               <button
-                                onClick={() => {
-                                  setEditingCommentId(comment._id);
-                                  setEditingCommentText(comment.comment);
-                                  setDropdownOpen(null);
-                                }}
-                                className="block w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                onClick={() =>
+                                  setDropdownOpen(
+                                    dropdownOpen === comment._id ? null : comment._id
+                                  )
+                                }
+                                className="p-1 rounded-full hover:bg-gray-100"
                               >
-                                Edit
+                                <IoEllipsisVertical className="text-gray-500" />
                               </button>
-                              <button
-                                onClick={() => handleDeleteComment(comment._id)}
-                                className="block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50"
-                              >
-                                Delete
-                              </button>
+                              {dropdownOpen === comment._id && (
+                                <div className="absolute right-0 mt-1 w-32 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                                  <button
+                                    onClick={() => {
+                                      setEditingCommentId(comment._id);
+                                      setEditingCommentText(comment.comment);
+                                      setDropdownOpen(null);
+                                    }}
+                                    className="block w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                  >
+                                    Edit
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteComment(comment._id)}
+                                    className="block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50"
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
+                              )}
                             </div>
                           )}
                         </div>
-                      )}
-                    </div>
 
-                    {editingCommentId === comment._id ? (
-                      <div className="mt-2">
-                        <textarea
-                          value={editingCommentText}
-                          onChange={(e) =>
-                            setEditingCommentText(e.target.value)
-                          }
-                          className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          rows={2}
-                        ></textarea>
-                        <div className="flex gap-2 mt-2">
-                          <button
-                            onClick={() => {
-                              setEditingCommentId(null);
-                              setEditingCommentText('');
-                            }}
-                            className="px-3 py-1 text-sm rounded border border-gray-300 text-gray-700 hover:bg-gray-100"
-                          >
-                            Cancel
-                          </button>
-                          <button
-                            onClick={() =>
-                              handleEditComment(comment._id)
-                            }
-                            className="px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-700"
-                          >
-                            Save
-                          </button>
-                        </div>
+                        {editingCommentId === comment._id ? (
+                          <div className="mt-2">
+                            <textarea
+                              value={editingCommentText}
+                              onChange={(e) =>
+                                setEditingCommentText(e.target.value)
+                              }
+                              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              rows={2}
+                            ></textarea>
+                            <div className="flex gap-2 mt-2">
+                              <button
+                                onClick={() => {
+                                  setEditingCommentId(null);
+                                  setEditingCommentText('');
+                                }}
+                                className="px-3 py-1 text-sm rounded border border-gray-300 text-gray-700 hover:bg-gray-100"
+                              >
+                                Cancel
+                              </button>
+                              <button
+                                onClick={() =>
+                                  handleEditComment(comment._id)
+                                }
+                                className="px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-700"
+                              >
+                                Save
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="text-gray-700 mt-1">{comment.comment}</p>
+                        )}
+
+                        <p className="text-xs text-gray-500 mt-1">
+                          {new Date(comment.createdAt).toLocaleDateString()}
+                        </p>
                       </div>
-                    ) : (
-                      <p className="text-gray-700 mt-1">{comment.comment}</p>
-                    )}
-
-                    <p className="text-xs text-gray-500 mt-1">
-                      {new Date(comment.createdAt).toLocaleDateString()}
-                    </p>
-                  </div>
-                </div>
-              ))
-            )}
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
           </div>
+
+          <aside className="space-y-6">
+            <div className="sticky top-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold text-gray-900">Suggested Videos</h2>
+              </div>
+
+              {suggestedVideos.length === 0 ? (
+                <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-4 text-sm text-gray-600">
+                  No suggested videos available.
+                </div>
+              ) : (
+                <div className="space-y-1">
+                  {suggestedVideos.slice(0, 5).map((item) => (
+                    <article
+                      key={item._id}
+                      className="flex gap-4 rounded-3xl p-4 transition-colors hover:bg-gray-50 cursor-pointer"
+                      onClick={() => navigate(`/video/${item._id}`)}
+                    >
+                      <div className="h-28 w-44 overflow-hidden rounded-2xl bg-gray-100 shrink-0">
+                        <img
+                          src={item.thumbNail || fallbackThumbnail}
+                          alt={item.title}
+                          className="h-full w-full object-cover"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = fallbackThumbnail;
+                          }}
+                        />
+                      </div>
+                      <div className="min-w-0">
+                        <h3 className="text-base font-semibold text-gray-900 truncate">{item.title}</h3>
+                        <p className="mt-1 text-sm text-gray-500 truncate">{item.channelName}</p>
+                        <p className="mt-2 text-sm text-gray-500 line-clamp-2">{item.description || 'No description.'}</p>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </div>
+          </aside>
         </div>
       </div>
     </main>

@@ -1,3 +1,4 @@
+// importing necessary icons and hooks for navigation
 import { TiHome } from "react-icons/ti";
 import { SiYoutubeshorts } from "react-icons/si";
 import { MdOutlineSubscriptions } from "react-icons/md";
@@ -12,7 +13,7 @@ import { SiYoutubemusic } from "react-icons/si";
 import { SiYoutubekids } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
 
-
+// sidebar component for navigation, includes links to home, shorts, subscriptions, profile, history, explore, and more sections
 function SideBar({ isOpen }) {
   const navigate = useNavigate();
   const sidebarWidth = isOpen ? "w-60" : "w-20";
@@ -47,7 +48,7 @@ function SideBar({ isOpen }) {
           </button>
         </div>
 
-        {/* Everything below only shows when open */}
+        {/* Everything below */}
         {isOpen && (
           <>
             {/* History */}

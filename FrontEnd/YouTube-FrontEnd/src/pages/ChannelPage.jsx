@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { IoEllipsisVertical } from 'react-icons/io5';
 
+// ChannelPage component to display user's channel information
 const ChannelPage = ({ isSidebarOpen }) => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ const ChannelPage = ({ isSidebarOpen }) => {
     category: 'Other',
   });
 
+  // function to get user initials for profile icon
   const getUserInitials = (name) => {
     return name
       .split(' ')
@@ -29,13 +31,14 @@ const ChannelPage = ({ isSidebarOpen }) => {
       .join('')
       .slice(0, 2);
   };
-
+  // redirect to login page if user is not authenticated after loading state is complete
   useEffect(() => {
     if (!loading && !user) {
       navigate('/login');
     }
   }, [loading, user, navigate]);
 
+  // Effect to handle clicks outside the dropdown to close it
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -48,6 +51,7 @@ const ChannelPage = ({ isSidebarOpen }) => {
     };
   }, []);
 
+  // Effect to fetch channel information and videos uploaded by the user 
   useEffect(() => {
     if (!user) return;
 
@@ -57,7 +61,8 @@ const ChannelPage = ({ isSidebarOpen }) => {
       try {
         const channelResponse = await axios.get(`/channel/channelInfo/${encodeURIComponent(user.name)}`);
         setChannelInfo(channelResponse.data.channel);
-      } catch (err) {
+      } 
+      catch (err) {
         setChannelInfo(null);
       }
 
@@ -72,9 +77,11 @@ const ChannelPage = ({ isSidebarOpen }) => {
           return channelMatch || ownerMatch;
         });
         setVideos(filteredVideos);
-      } catch (err) {
+      } 
+      catch (err) {
         setError(err.response?.data?.message || 'Failed to load channel videos');
-      } finally {
+      } 
+      finally {
         setLoadingData(false);
       }
     };
@@ -82,6 +89,7 @@ const ChannelPage = ({ isSidebarOpen }) => {
     fetchChannelData();
   }, [user]);
 
+  // function to handle start editing a video
   const startEditing = (video) => {
     setEditingVideoId(video._id);
     setEditValues({
@@ -92,7 +100,7 @@ const ChannelPage = ({ isSidebarOpen }) => {
       category: video.category || 'Other',
     });
   };
-
+  // function to cancel editing a video and reset edit values
   const cancelEditing = () => {
     setEditingVideoId(null);
     setEditValues({
@@ -103,14 +111,14 @@ const ChannelPage = ({ isSidebarOpen }) => {
       category: 'Other',
     });
   };
-
+  // function to handle changes in edit form inputs and update edit values state
   const handleEditChange = (e) => {
     setEditValues({
       ...editValues,
       [e.target.name]: e.target.value,
     });
   };
-
+  // function to save edited video details by sending PUT request to backend
   const saveVideoDetails = async (videoId) => {
     try {
       await axios.put(`/video/updateVideo/${videoId}`, editValues);
@@ -119,18 +127,21 @@ const ChannelPage = ({ isSidebarOpen }) => {
       );
       setVideos(updatedVideos);
       cancelEditing();
-    } catch (err) {
+    } 
+    catch (err) {
       setError(err.response?.data?.message || 'Failed to update video');
     }
   };
 
+  // function to delete a video by sending DELETE request to backend
   const deleteVideo = async (videoId) => {
     if (window.confirm('Are you sure you want to delete this video?')) {
       try {
         await axios.delete(`/video/deleteVideo/${videoId}`);
         setVideos(videos.filter((video) => video._id !== videoId));
         setDropdownOpen(null);
-      } catch (err) {
+      } 
+      catch (err) {
         setError(err.response?.data?.message || 'Failed to delete video');
       }
     }
@@ -145,6 +156,7 @@ const ChannelPage = ({ isSidebarOpen }) => {
   }
 
   return (
+    // main content area for channel page which displays channel information and list of uploaded videos 
     <main className={`flex-1 pt-6 px-6 ${isSidebarOpen ? 'ml-60' : 'ml-20'}`}>
       <div className="max-w-7xl mx-auto">
         <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm mb-6">
@@ -189,8 +201,7 @@ const ChannelPage = ({ isSidebarOpen }) => {
                         name="title"
                         value={editValues.title}
                         onChange={handleEditChange}
-                        className="w-full rounded-md border border-gray-300 px-3 py-2"
-                      />
+                        className="w-full rounded-md border border-gray-300 px-3 py-2"/>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Thumbnail URL</label>
@@ -216,8 +227,7 @@ const ChannelPage = ({ isSidebarOpen }) => {
                         name="category"
                         value={editValues.category}
                         onChange={handleEditChange}
-                        className="w-full rounded-md border border-gray-300 px-3 py-2"
-                      >
+                        className="w-full rounded-md border border-gray-300 px-3 py-2">
                         <option value="Music">Music</option>
                         <option value="Gaming">Gaming</option>
                         <option value="Entertainment">Entertainment</option>
@@ -241,20 +251,17 @@ const ChannelPage = ({ isSidebarOpen }) => {
                         value={editValues.description}
                         onChange={handleEditChange}
                         rows={3}
-                        className="w-full rounded-md border border-gray-300 px-3 py-2"
-                      />
+                        className="w-full rounded-md border border-gray-300 px-3 py-2"/>
                     </div>
                     <div className="flex gap-2">
                       <button
                         onClick={() => saveVideoDetails(video._id)}
-                        className="flex-1 rounded-full bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-                      >
+                        className="flex-1 rounded-full bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
                         Save
                       </button>
                       <button
                         onClick={cancelEditing}
-                        className="flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
-                      >
+                        className="flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">
                         Cancel
                       </button>
                     </div>
@@ -266,16 +273,14 @@ const ChannelPage = ({ isSidebarOpen }) => {
                       <img
                         src={video.thumbNail || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIyNSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRjNGNEY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OTk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIFRodW1ibmFpbDwvdGV4dD48L3N2Zz4='}
                         alt={video.title}
-                        className="h-full w-full object-cover"
-                      />
+                        className="h-full w-full object-cover"/>
                     </div>
 
                     {/* Dropdown Menu */}
                     <div className="absolute top-2 right-2">
                       <button
                         onClick={() => setDropdownOpen(dropdownOpen === video._id ? null : video._id)}
-                        className="p-1 rounded-full bg-black bg-opacity-50 hover:bg-opacity-70 transition-colors"
-                      >
+                        className="p-1 rounded-full bg-black bg-opacity-50 hover:bg-opacity-70 transition-colors">
                         <IoEllipsisVertical className="text-white text-lg" />
                       </button>
                       {dropdownOpen === video._id && (
@@ -285,14 +290,12 @@ const ChannelPage = ({ isSidebarOpen }) => {
                               startEditing(video);
                               setDropdownOpen(null);
                             }}
-                            className="block w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                          >
+                            className="block w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
                             Edit
                           </button>
                           <button
                             onClick={() => deleteVideo(video._id)}
-                            className="block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                          >
+                            className="block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
                             Delete
                           </button>
                         </div>

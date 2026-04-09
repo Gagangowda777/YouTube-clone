@@ -1,22 +1,25 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 
+// login function for user authentication
 const Login = ({ onSwitchToRegister, onClose }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
+  // state for handling loading and error messages during login process
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const { login } = useAuth();
+  const { login } = useAuth(); // Get login function from AuthContext to perform login 
 
+  // handle form input changes 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
   };
-
+  // handle form submission for login
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -26,25 +29,26 @@ const Login = ({ onSwitchToRegister, onClose }) => {
 
     if (result.success) {
       onClose();
-    } else {
+    } 
+    else {
       setError(result.message);
     }
     setLoading(false);
   };
 
   return (
+    // modal for login form with email and password fields, and error handling
     <div className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50 border-2 border-gray-300">
       <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Sign In</h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-xl"
-          >
+            className="text-gray-500 hover:text-gray-700 text-xl">
             x
           </button>
         </div>
-
+        {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <input
@@ -54,8 +58,7 @@ const Login = ({ onSwitchToRegister, onClose }) => {
               value={formData.email}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+              required/>
           </div>
 
           <div>
@@ -66,8 +69,7 @@ const Login = ({ onSwitchToRegister, onClose }) => {
               value={formData.password}
               onChange={handleChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+              required/>
           </div>
 
           {error && (
@@ -77,8 +79,7 @@ const Login = ({ onSwitchToRegister, onClose }) => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-          >
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50">
             {loading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
@@ -87,8 +88,7 @@ const Login = ({ onSwitchToRegister, onClose }) => {
           <span className="text-gray-600">Don't have an account? </span>
           <button
             onClick={onSwitchToRegister}
-            className="text-blue-600 hover:text-blue-700 font-medium"
-          >
+            className="text-blue-600 hover:text-blue-700 font-medium">
             Sign Up
           </button>
         </div>
