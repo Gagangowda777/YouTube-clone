@@ -9,6 +9,7 @@ import LoginPage from "./pages/LoginPage"
 import RegisterPage from "./pages/RegisterPage"
 import ChannelPage from "./pages/ChannelPage"
 import VideoPlayerPage from "./pages/VideoPlayerPage"
+import NotFoundPage from "./pages/NotFoundPage"
 import { AuthProvider } from "./context/AuthContext"
 
 function AppContent() {
@@ -69,14 +70,7 @@ function AppContent() {
           />
           <Route
             path="*"
-            element={
-              <MainContent
-                isSidebarOpen={isSidebarOpen}
-                refreshKey={refreshVideosKey}
-                onVideoClick={handleVideoClick}
-                searchQuery={searchQuery}
-              />
-            }
+            element={<NotFoundPage />}
           />
         </Routes>
       </div>
