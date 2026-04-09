@@ -11,6 +11,7 @@ import ChannelPage from "./pages/ChannelPage"
 import VideoPlayerPage from "./pages/VideoPlayerPage"
 import NotFoundPage from "./pages/NotFoundPage"
 import { AuthProvider } from "./context/AuthContext"
+import { ThemeProvider } from "./context/ThemeContext"
 
 function AppContent() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -44,7 +45,7 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-[#0f0f0f] transition-colors duration-300">
       <Header onMenuClick={toggleSidebar} onCreateVideo={handleOpenCreateVideo} onSearch={setSearchQuery} />
       <div className="flex">
         <SideBar isOpen={isSidebarOpen} />
@@ -92,15 +93,17 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/*" element={<AppContent />} />
-        </Routes>
-      </Router>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/*" element={<AppContent />} />
+          </Routes>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

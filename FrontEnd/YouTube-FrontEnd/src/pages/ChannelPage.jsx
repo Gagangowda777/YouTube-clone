@@ -149,8 +149,8 @@ const ChannelPage = ({ isSidebarOpen }) => {
 
   if (loading || loadingData) {
     return (
-      <main className={`flex-1 pt-4 sm:pt-6 px-2 sm:px-4 md:px-6 transition-all duration-300 w-full overflow-x-hidden ${isSidebarOpen ? 'md:ml-60 ml-0' : 'md:ml-20 ml-0'}`}>
-        <div className="max-w-7xl mx-auto text-gray-600">Loading channel...</div>
+    <main className={`flex-1 pt-4 sm:pt-6 px-2 sm:px-4 md:px-6 transition-all duration-300 w-full overflow-x-hidden ${isSidebarOpen ? 'md:ml-60 ml-0' : 'md:ml-20 ml-0'}`}>
+        <div className="max-w-7xl mx-auto text-gray-600 dark:text-gray-400">Loading channel...</div>
       </main>
     );
   }
@@ -159,7 +159,7 @@ const ChannelPage = ({ isSidebarOpen }) => {
     // main content area for channel page which displays channel information and list of uploaded videos 
     <main className={`flex-1 pt-6 px-6 ${isSidebarOpen ? 'ml-60' : 'ml-20'}`}>
       <div className="max-w-7xl mx-auto">
-        <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm mb-6">
+        <div className="rounded-3xl border border-gray-200 dark:border-zinc-800 bg-white dark:bg-[#0f0f0f] p-6 shadow-sm mb-6">
           <div className="flex flex-col lg:flex-row gap-6">
             {/* User Initial */}
             <div className="flex justify-center lg:justify-start shrink-0">
@@ -170,9 +170,9 @@ const ChannelPage = ({ isSidebarOpen }) => {
 
             {/* User Info */}
             <div className="flex-1 text-center lg:text-left">
-              <h1 className="text-3xl font-bold mb-2">{user.name}</h1>
-              <p className="text-gray-600 mb-2">{user.email}</p>
-              <p className="text-gray-500">
+              <h1 className="text-3xl font-bold mb-2 text-black dark:text-white">{user.name}</h1>
+              <p className="text-gray-600 dark:text-gray-400 mb-2">{user.email}</p>
+              <p className="text-gray-500 dark:text-gray-400">
                 {channelInfo?.channelDescription || 'Manage your channel and edit your uploaded videos.'}
               </p>
             </div>
@@ -186,48 +186,48 @@ const ChannelPage = ({ isSidebarOpen }) => {
         )}
 
         {videos.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-8 text-center text-gray-600">
+          <div className="rounded-xl border border-dashed border-gray-300 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-900 p-8 text-center text-gray-600 dark:text-gray-400">
             No videos uploaded yet. Use the header Create button to add your first video.
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {videos.map((video) => (
-              <div key={video._id} className="rounded-3xl bg-white overflow-hidden shadow-sm">
+              <div key={video._id} className="rounded-3xl bg-white dark:bg-[#121212] dark:border dark:border-zinc-800 overflow-hidden shadow-sm">
                 {editingVideoId === video._id ? (
                   <div className="p-4 space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
                       <input
                         name="title"
                         value={editValues.title}
                         onChange={handleEditChange}
-                        className="w-full rounded-md border border-gray-300 px-3 py-2"/>
+                        className="w-full rounded-md border border-gray-300 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white px-3 py-2"/>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Thumbnail URL</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Thumbnail URL</label>
                       <input
                         name="thumbNail"
                         value={editValues.thumbNail}
                         onChange={handleEditChange}
-                        className="w-full rounded-md border border-gray-300 px-3 py-2"
+                        className="w-full rounded-md border border-gray-300 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white px-3 py-2"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Video URL</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Video URL</label>
                       <input
                         name="videoUrl"
                         value={editValues.videoUrl}
                         onChange={handleEditChange}
-                        className="w-full rounded-md border border-gray-300 px-3 py-2"
+                        className="w-full rounded-md border border-gray-300 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white px-3 py-2"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category</label>
                       <select
                         name="category"
                         value={editValues.category}
                         onChange={handleEditChange}
-                        className="w-full rounded-md border border-gray-300 px-3 py-2">
+                        className="w-full rounded-md border border-gray-300 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white px-3 py-2">
                         <option value="Music">Music</option>
                         <option value="Gaming">Gaming</option>
                         <option value="Entertainment">Entertainment</option>
@@ -245,13 +245,13 @@ const ChannelPage = ({ isSidebarOpen }) => {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
                       <textarea
                         name="description"
                         value={editValues.description}
                         onChange={handleEditChange}
                         rows={3}
-                        className="w-full rounded-md border border-gray-300 px-3 py-2"/>
+                        className="w-full rounded-md border border-gray-300 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white px-3 py-2"/>
                     </div>
                     <div className="flex gap-2">
                       <button
@@ -261,7 +261,7 @@ const ChannelPage = ({ isSidebarOpen }) => {
                       </button>
                       <button
                         onClick={cancelEditing}
-                        className="flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">
+                        className="flex-1 rounded-full border border-gray-300 dark:border-zinc-700 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800">
                         Cancel
                       </button>
                     </div>
@@ -284,18 +284,18 @@ const ChannelPage = ({ isSidebarOpen }) => {
                         <IoEllipsisVertical className="text-white text-lg" />
                       </button>
                       {dropdownOpen === video._id && (
-                        <div ref={dropdownRef} className="absolute right-0 mt-1 w-32 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                        <div ref={dropdownRef} className="absolute right-0 mt-1 w-32 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-md shadow-lg z-10">
                           <button
                             onClick={() => {
                               startEditing(video);
                               setDropdownOpen(null);
                             }}
-                            className="block w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                            className="block w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors">
                             Edit
                           </button>
                           <button
                             onClick={() => deleteVideo(video._id)}
-                            className="block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                            className="block w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/40 transition-colors">
                             Delete
                           </button>
                         </div>
@@ -304,10 +304,10 @@ const ChannelPage = ({ isSidebarOpen }) => {
 
                     {/* Video Info */}
                     <div className="p-4">
-                      <h3 className="font-semibold text-gray-900 line-clamp-2 mb-1">{video.title}</h3>
-                      <p className="text-sm text-gray-500 mb-2">{video.channelName}</p>
-                      <p className="text-xs text-gray-600 line-clamp-2 mb-2">{video.description || 'No description available.'}</p>
-                      <div className="flex items-center justify-between text-xs text-gray-500">
+                      <h3 className="font-semibold text-gray-900 dark:text-white line-clamp-2 mb-1">{video.title}</h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{video.channelName}</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2 mb-2">{video.description || 'No description available.'}</p>
+                      <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-500">
                         <span>{video.views ?? 0} views</span>
                         <span>{new Date(video.createdAt).toLocaleDateString()}</span>
                       </div>

@@ -9,11 +9,14 @@ import { IoEllipsisVertical } from "react-icons/io5";
 import { RxHamburgerMenu } from "react-icons/rx";
 // importing AuthContext to manage user authentication 
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 
 // function for the header of the application which includes logo, search bar, and user profile
 function Header({ onMenuClick, onCreateVideo, onSearch }) {
   const navigate = useNavigate();     // Hook for navigation
   const { user, logout } = useAuth(); // Get user info and logout function from AuthContext
+  const { isDarkMode, toggleTheme } = useTheme(); // Get theme toggler
+
   const [searchInput, setSearchInput] = useState(''); // State for managing search input
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for managing dropdown 
   const dropdownRef = useRef(null); // Ref for dropdown 
@@ -64,13 +67,13 @@ function Header({ onMenuClick, onCreateVideo, onSearch }) {
   return (
     <>
       {/* header which is sticky position */}
-      <div className="sticky top-0 z-50">
+      <div className="sticky top-0 z-50 bg-white dark:bg-[#0f0f0f] transition-colors duration-300">
         <div className="flex justify-between items-center px-2 sm:px-4 py-2.5 gap-2 sm:gap-6">
 
           {/* Logo and Menu */}
           <div className="flex items-center gap-2 sm:gap-4 shrink-0">
-            <button onClick={onMenuClick} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-              <RxHamburgerMenu className="text-2xl" />
+            <button onClick={onMenuClick} className="p-2 hover:bg-gray-100 dark:hover:bg-[#272727] rounded-full transition-colors">
+              <RxHamburgerMenu className="text-2xl text-black dark:text-white" />
             </button>
             <div className="flex items-center gap-1 cursor-pointer" onClick={() => navigate('/')}>
               <img src="./src/assets/yt.png" alt="yt-logo" className="w-20 sm:w-26 h-5 sm:h-7" />
@@ -79,7 +82,7 @@ function Header({ onMenuClick, onCreateVideo, onSearch }) {
 
           {/* search Bar with search icon and record icon*/}
           <form onSubmit={(e) => { e.preventDefault(); onSearch(searchInput); }} className="flex flex-1 items-center gap-1 sm:gap-2 max-w-2xl sm:w-full mx-2 sm:mx-0">
-            <div className="w-full flex items-center border border-gray-300 rounded-full px-3 sm:px-5 py-1.5 sm:py-2">
+            <div className="w-full flex items-center border border-gray-300 dark:border-zinc-700 rounded-full px-3 sm:px-5 py-1.5 sm:py-2 bg-white dark:bg-[#121212]">
               <input
                 type="text"
                 name="searchbar"
@@ -87,14 +90,14 @@ function Header({ onMenuClick, onCreateVideo, onSearch }) {
                 id="searchbar"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                className="bg-transparent w-full outline-none text-sm placeholder-gray-500 p-0.5"/>
+                className="bg-transparent w-full outline-none text-sm placeholder-gray-500 dark:placeholder-zinc-400 p-0.5 text-black dark:text-white"/>
 
-              <button type="submit" className="cursor-pointer">
+              <button type="submit" className="cursor-pointer text-gray-600 dark:text-zinc-300">
                 <CiSearch className="text-xl" />
               </button>
             </div>
-            <button type="button" className="p-2.5 bg-gray-200 hover:bg-gray-300 rounded-full transition-colors hidden sm:flex items-center justify-center">
-              <FaMicrophone className="text-lg text-gray-800" />
+            <button type="button" className="p-2.5 bg-gray-100 dark:bg-[#272727] hover:bg-gray-200 dark:hover:bg-[#3f3f3f] rounded-full transition-colors hidden sm:flex items-center justify-center">
+              <FaMicrophone className="text-lg text-gray-800 dark:text-white" />
             </button>
           </form>
 
@@ -105,7 +108,7 @@ function Header({ onMenuClick, onCreateVideo, onSearch }) {
                 {/* create Video Button */}
                 <button
                   onClick={handleCreateVideo}
-                  className="px-3 py-1.5 sm:px-4 sm:py-2 hover:bg-gray-300 rounded-full transition-colors bg-gray-200 mr-1 sm:mr-2 flex items-center justify-center font-medium" 
+                  className="px-3 py-1.5 sm:px-4 sm:py-2 hover:bg-gray-300 dark:hover:bg-[#3f3f3f] rounded-full transition-colors bg-gray-200 dark:bg-[#272727] text-black dark:text-white mr-1 sm:mr-2 flex items-center justify-center font-medium" 
                   title="Create video">
                   <span className="hidden sm:inline">+ Create</span>
                   <span className="sm:hidden text-lg leading-none">+</span>
@@ -118,15 +121,20 @@ function Header({ onMenuClick, onCreateVideo, onSearch }) {
                     {getUserInitials(user.name)}
                   </button>
                   {isDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-[#212121] border border-gray-200 dark:border-zinc-700 rounded-md shadow-lg z-50">
+                      <button
+                        onClick={toggleTheme}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors">
+                        {isDarkMode ? "Light Mode" : "Dark Mode"}
+                      </button>
                       <button
                         onClick={handleViewChannel}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors">
                         View Channel
                       </button>
                       <button
                         onClick={() => { logout(); setIsDropdownOpen(false); }}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors">
                         Sign Out
                       </button>
                     </div>
@@ -136,13 +144,13 @@ function Header({ onMenuClick, onCreateVideo, onSearch }) {
             ) : (
               // contional rendering for sign in button if user is not logged in
               <>
-                <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                  <IoEllipsisVertical className="text-lg text-gray-700" />
+                <button className="p-2 hover:bg-gray-100 dark:hover:bg-[#272727] rounded-full transition-colors">
+                  <IoEllipsisVertical className="text-lg text-gray-700 dark:text-white" />
                 </button>
                 <button
                   onClick={handleSignInClick}
-                  className="flex items-center gap-2 px-3 py-1.5 bg-gray-200 hover:bg-gray-300 rounded-full transition-colors">
-                  <CgProfile className="text-xl text-gray-700" />
+                  className="flex items-center gap-2 px-3 py-1.5 bg-gray-200 dark:bg-[#272727] hover:bg-gray-300 dark:hover:bg-[#3f3f3f] rounded-full transition-colors text-black dark:text-white">
+                  <CgProfile className="text-xl text-gray-700 dark:text-white" />
                   <span className="text-sm hidden md:inline font-medium p-1">Sign In</span>
                 </button>
               </>

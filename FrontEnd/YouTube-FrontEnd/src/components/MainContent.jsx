@@ -74,10 +74,10 @@ function MainContent({ isSidebarOpen, refreshKey, onVideoClick, searchQuery }) {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-sm font-medium whitespace-nowrap flex-shrink-0 transition-colors ${
+                className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-sm font-medium whitespace-nowrap shrink-0 transition-colors ${
                   selectedCategory === category
-                    ? 'bg-black text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>
+                    ? 'bg-black text-white dark:bg-white dark:text-black'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-[#272727] dark:text-gray-300 dark:hover:bg-[#3f3f3f]'}`}>
                 {category}
               </button>
             ))}
@@ -86,11 +86,11 @@ function MainContent({ isSidebarOpen, refreshKey, onVideoClick, searchQuery }) {
         
         {/* video Grid */}
         {loading ? (
-          <div className="text-gray-500">Loading videos...</div>
+          <div className="text-gray-500 dark:text-gray-400">Loading videos...</div>
         ) : error ? (
-          <div className="text-red-600">{error}</div>
+          <div className="text-red-600 dark:text-red-400">{error}</div>
         ) : videos.length === 0 ? (
-          <div className="border border-dashed border-gray-300 bg-gray-50 p-8 text-center text-gray-600">
+          <div className="border border-dashed border-gray-300 dark:border-zinc-800 bg-gray-50 dark:bg-[#0f0f0f] p-8 text-center text-gray-600 dark:text-gray-400">
             No videos available yet. Upload one using the button in the header.
           </div>
         ) : (
@@ -108,7 +108,7 @@ function MainContent({ isSidebarOpen, refreshKey, onVideoClick, searchQuery }) {
                 key={video._id}
                 className="overflow-hidden rounded-xl bg-transparent cursor-pointer"
                 onClick={() => navigate(`/video/${video._id}`)}>
-                <div className="overflow-hidden rounded-xl bg-gray-100 aspect-video">
+                <div className="overflow-hidden rounded-xl bg-gray-100 dark:bg-zinc-800 aspect-video">
                   <img
                     src={video.thumbNail || fallbackThumbnail}
                     alt={video.title}
@@ -118,15 +118,15 @@ function MainContent({ isSidebarOpen, refreshKey, onVideoClick, searchQuery }) {
                       e.target.src = fallbackThumbnail}}/>
                 </div>
                 <div className="px-1 pb-4 pt-4">
-                  <h2 className="text-base font-semibold leading-snug text-gray-900 line-clamp-2">{video.title}</h2>
+                  <h2 className="text-base font-semibold leading-snug text-gray-900 dark:text-white line-clamp-2">{video.title}</h2>
                   <div className="mt-3 flex items-center gap-3">
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-900 text-xs font-semibold text-white">
                       {getUserInitials(video.channelName)}
                     </div>
-                    <p className="text-gray-700 truncate">{video.channelName}</p>
+                    <p className="text-gray-700 dark:text-gray-300 truncate">{video.channelName}</p>
                   </div>
-                  <p className="mt-3 text-sm text-gray-600 line-clamp-2">{video.description || 'No description provided.'}</p>
-                  <div className="mt-3 text-xs text-gray-500">{video.views ?? 0} views</div>
+                  <p className="mt-3 text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{video.description || 'No description provided.'}</p>
+                  <div className="mt-3 text-xs text-gray-500 dark:text-gray-400">{video.views ?? 0} views</div>
                 </div>
               </article>
             ))}

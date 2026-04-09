@@ -244,7 +244,7 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
             {/* Video Info */}
             <div className="p-2">
               {/* Title */}
-              <h1 className="text-3xl font-bold text-gray-900 mb-3">{video.title}</h1>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">{video.title}</h1>
 
               {/* Channel Name + Like/Dislike */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-3 mb-4 justify-between">
@@ -253,17 +253,17 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
                     className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-base shrink-0 bg-blue-800">
                     {video.channelName ? video.channelName.charAt(0).toUpperCase() : '?'}
                   </div>
-                  <p className="text-lg font-medium text-gray-800">{video.channelName}</p>
+                  <p className="text-lg font-medium text-gray-800 dark:text-gray-200">{video.channelName}</p>
                 </div>
 
                 {/* Like & Dislike pill */}
-                <div className="flex items-center rounded-full bg-gray-100 overflow-hidden w-fit">
+                <div className="flex items-center rounded-full bg-gray-100 dark:bg-[#272727] overflow-hidden w-fit">
                   <button
                     onClick={toggleLike}
                     className={`flex items-center gap-2 px-4 py-2 transition-colors ${
                       likedVideos[videoId]
-                        ? 'bg-blue-100 text-blue-600'
-                        : 'text-gray-700 hover:bg-gray-200'
+                        ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300'
+                        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-[#3f3f3f]'
                     }`}
                   >
                     {likedVideos[videoId] ? (
@@ -273,13 +273,13 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
                     )}
                     <span>Like</span>
                   </button>
-                  <div className="w-px h-6 bg-gray-300 shrink-0" />
+                  <div className="w-px h-6 bg-gray-300 dark:bg-zinc-600 shrink-0" />
                   <button
                     onClick={toggleDislike}
                     className={`flex items-center gap-2 px-4 py-2 transition-colors ${
                       dislikedVideos[videoId]
-                        ? 'bg-red-100 text-red-600'
-                        : 'text-gray-700 hover:bg-gray-200'
+                        ? 'bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300'
+                        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-[#3f3f3f]'
                     }`}
                   >
                     {dislikedVideos[videoId] ? (
@@ -293,9 +293,9 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
               </div>
 
               {/* Description */}
-              <div className="border-t border-gray-200 pt-4">
-                <h3 className="font-semibold text-gray-900 mb-2">Description</h3>
-                <p className="text-gray-600 whitespace-pre-wrap">
+              <div className="border-t border-gray-200 dark:border-zinc-800 pt-4">
+                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Description</h3>
+                <p className="text-gray-600 dark:text-gray-300 whitespace-pre-wrap">
                   {video.description || 'No description provided.'}
                 </p>
               </div>
@@ -303,22 +303,22 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
 
             {/* Comments Section */}
             <div className="p-6 ">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Comments</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Comments</h2>
 
               {/* Add Comment Form */}
               {user ? (
-                <div className="mb-6 pb-6 border-b border-gray-200">
+                <div className="mb-6 pb-6 border-b border-gray-200 dark:border-zinc-800">
                   <textarea
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder="Add a comment..."
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full rounded-lg border border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     rows={3}
                   ></textarea>
                   <div className="flex justify-end gap-2 mt-3">
                     <button
                       onClick={() => setNewComment('')}
-                      className="px-4 py-2 rounded-full border border-gray-300 text-gray-700 hover:bg-gray-100">
+                      className="px-4 py-2 rounded-full border border-gray-300 dark:border-zinc-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#272727]">
                       Cancel
                     </button>
                     <button
@@ -330,12 +330,12 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
                   </div>
                 </div>
               ) : (
-                <div className="mb-6 pb-6 border-b border-gray-200 p-4 bg-gray-50 rounded-lg">
-                  <p className="text-gray-600">
+                <div className="mb-6 pb-6 border-b border-gray-200 dark:border-zinc-800 p-4 bg-gray-50 dark:bg-zinc-900 rounded-lg">
+                  <p className="text-gray-600 dark:text-gray-400">
                     Please{' '}
                     <button
                       onClick={() => navigate('/login')}
-                      className="text-blue-600 hover:underline">
+                      className="text-blue-600 dark:text-blue-400 hover:underline">
                       sign in
                     </button>
                     {' '}to comment.
@@ -352,19 +352,19 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
               {/* Comments List */}
               <div className="space-y-4">
                 {comments.length === 0 ? (
-                  <p className="text-gray-500 text-center py-8">
+                  <p className="text-gray-500 dark:text-gray-400 text-center py-8">
                     No comments yet. Be the first to comment!
                   </p>
                 ) : (
                   comments.map((comment) => (
                     <div key={comment._id} className="flex gap-4">
                       {/* User Avatar */}
-                      <div className="w-10 h-10 bg-gray-300 rounded-full shrink-0"></div>
+                      <div className="w-10 h-10 bg-gray-300 dark:bg-zinc-700 rounded-full shrink-0"></div>
 
                       <div className="flex-1">
                         <div className="flex items-center justify-between gap-2">
-                          <p className="font-semibold text-gray-900">{comment.userName}</p>
-                          {user && user._id === comment.userId && (
+                          <p className="font-semibold text-gray-900 dark:text-gray-200">{comment.userName}</p>
+                          {user && (user._id || user.id) === comment.userId && (
                             <div className="relative" ref={dropdownOpen === comment._id ? dropdownRef : null}>
                               <button
                                 onClick={() =>
@@ -372,25 +372,25 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
                                     dropdownOpen === comment._id ? null : comment._id
                                   )
                                 }
-                                className="p-1 rounded-full hover:bg-gray-100"
+                                className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-800"
                               >
-                                <IoEllipsisVertical className="text-gray-500" />
+                                <IoEllipsisVertical className="text-gray-500 dark:text-gray-400" />
                               </button>
                               {dropdownOpen === comment._id && (
-                                <div className="absolute right-0 mt-1 w-32 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                                <div className="absolute right-0 mt-1 w-32 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-md shadow-lg z-10">
                                   <button
                                     onClick={() => {
                                       setEditingCommentId(comment._id);
                                       setEditingCommentText(comment.comment);
                                       setDropdownOpen(null);
                                     }}
-                                    className="block w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    className="block w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-800"
                                   >
                                     Edit
                                   </button>
                                   <button
                                     onClick={() => handleDeleteComment(comment._id)}
-                                    className="block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50"
+                                    className="block w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30"
                                   >
                                     Delete
                                   </button>
@@ -407,7 +407,7 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
                               onChange={(e) =>
                                 setEditingCommentText(e.target.value)
                               }
-                              className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              className="w-full rounded-lg border border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                               rows={2}
                             ></textarea>
                             <div className="flex gap-2 mt-2">
@@ -416,7 +416,7 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
                                   setEditingCommentId(null);
                                   setEditingCommentText('');
                                 }}
-                                className="px-3 py-1 text-sm rounded border border-gray-300 text-gray-700 hover:bg-gray-100"
+                                className="px-3 py-1 text-sm rounded border border-gray-300 dark:border-zinc-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800"
                               >
                                 Cancel
                               </button>
@@ -431,10 +431,10 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
                             </div>
                           </div>
                         ) : (
-                          <p className="text-gray-700 mt-1">{comment.comment}</p>
+                          <p className="text-gray-700 dark:text-gray-300 mt-1">{comment.comment}</p>
                         )}
 
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                           {new Date(comment.createdAt).toLocaleDateString()}
                         </p>
                       </div>
@@ -448,11 +448,11 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
           <aside className="space-y-6">
             <div className="sticky top-6 space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-gray-900">Suggested Videos</h2>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Suggested Videos</h2>
               </div>
 
               {suggestedVideos.length === 0 ? (
-                <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-4 text-sm text-gray-600">
+                <div className="rounded-2xl border border-dashed border-gray-200 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-900 p-4 text-sm text-gray-600 dark:text-gray-400">
                   No suggested videos available.
                 </div>
               ) : (
@@ -460,10 +460,10 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
                   {suggestedVideos.slice(0, 5).map((item) => (
                     <article
                       key={item._id}
-                      className="flex gap-4 rounded-3xl p-4 transition-colors hover:bg-gray-50 cursor-pointer"
+                      className="flex gap-4 rounded-3xl p-4 transition-colors hover:bg-gray-50 dark:hover:bg-zinc-800/50 cursor-pointer"
                       onClick={() => navigate(`/video/${item._id}`)}
                     >
-                      <div className="h-28 w-44 overflow-hidden rounded-2xl bg-gray-100 shrink-0">
+                      <div className="h-28 w-44 overflow-hidden rounded-2xl bg-gray-100 dark:bg-zinc-800 shrink-0">
                         <img
                           src={item.thumbNail || fallbackThumbnail}
                           alt={item.title}
@@ -475,9 +475,9 @@ const VideoPlayerPage = ({ isSidebarOpen }) => {
                         />
                       </div>
                       <div className="min-w-0">
-                        <h3 className="text-base font-semibold text-gray-900 truncate">{item.title}</h3>
-                        <p className="mt-1 text-sm text-gray-500 truncate">{item.channelName}</p>
-                        <p className="mt-2 text-sm text-gray-500 line-clamp-2">{item.description || 'No description.'}</p>
+                        <h3 className="text-base font-semibold text-gray-900 dark:text-white truncate">{item.title}</h3>
+                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 truncate">{item.channelName}</p>
+                        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 line-clamp-2">{item.description || 'No description.'}</p>
                       </div>
                     </article>
                   ))}

@@ -38,37 +38,37 @@ const LoginPage = () => {
 
   return (
     // login form with email and password fields, error handling, and navigation to registration page and home page
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold mb-6 text-center">Sign In</h2>
+    <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-[#0f0f0f]">
+      <div className="w-full max-w-md p-8 bg-white dark:bg-[#121212] rounded-lg shadow-md border dark:border-zinc-800">
+        <h2 className="text-2xl font-semibold mb-6 text-center text-black dark:text-white">Sign In</h2>
         {/* Login form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
             <input
               type="email"
               name="email"
               placeholder="Enter your email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-zinc-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-800 dark:text-white"
               required/>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
             <input
               type="password"
               name="password"
               placeholder="Enter your password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-zinc-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-800 dark:text-white"
               required/>
           </div>
 
           {error && (
-            <div className="text-red-500 text-sm bg-red-50 p-3 rounded">{error}</div>)}
+            <div className="text-red-500 dark:text-red-400 text-sm bg-red-50 dark:bg-red-900/30 p-3 rounded">{error}</div>)}
 
           <button
             type="submit"
@@ -79,10 +79,10 @@ const LoginPage = () => {
         </form>
 
         <div className="mt-6 text-center">
-          <span className="text-gray-600">Don't have an account? </span>
+          <span className="text-gray-600 dark:text-gray-400">Don't have an account? </span>
           <button
             onClick={() => navigate('/register')}
-            className="text-blue-600 hover:text-blue-700 font-medium">
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium">
             Sign Up
           </button>
         </div>
@@ -90,7 +90,7 @@ const LoginPage = () => {
         <div className="mt-4 text-center">
           <button
             onClick={() => navigate('/')}
-            className="text-gray-600 hover:text-gray-700 text-sm">
+            className="text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 text-sm">
             ← Back to home
           </button>
         </div>
